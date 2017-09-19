@@ -1,4 +1,4 @@
-357c4a10ffacc90b1c22bef40604a62a *DESCRIPTION
+f1f7943c125d0aea49086e1a5bc8a98e *DESCRIPTION
 f9bf3e96d1d62d1da80a7dc6c7213824 *LICENSE
 453fba051931af9914f9f01584190f56 *NAMESPACE
 218930c64bfcb0f2c9376e9feda4e9c9 *R/await.R
@@ -23,8 +23,8 @@ d52247acd378b06279d0639a7c897786 *R/utils.R
 37e3ff75cabfa9df7b6328d29640871b *R/zzz.R
 bccab3f8ad97a44d5ec8ff3fde76be40 *README.md
 d3b859a6250588e678021531de45d89e *build/vignette.rds
-629c0c040c92134217f202c66a055952 *configure
-629c0c040c92134217f202c66a055952 *configure.win
+38f21fd1007f78b958a7e2ca9d9b227d *configure
+a519d765006dea2deac3835eaea84de8 *configure.win
 93e14822b8bc5f3bd0bf201728385f62 *inst/civis_ml_brandable.rds
 9e5a8dff5631eb02dde4525ec28eff8e *inst/civis_ml_err.rds
 a450a7c8fc637c226781f137e8cf5281 *inst/civis_ml_oos.rds
