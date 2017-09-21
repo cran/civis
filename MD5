@@ -1,6 +1,6 @@
-f1f7943c125d0aea49086e1a5bc8a98e *DESCRIPTION
+6c93e452e31f649bc9b68a073d2ae82b *DESCRIPTION
 f9bf3e96d1d62d1da80a7dc6c7213824 *LICENSE
-453fba051931af9914f9f01584190f56 *NAMESPACE
+681dc2882d0eca0a0014addd00c0049c *NAMESPACE
 218930c64bfcb0f2c9376e9feda4e9c9 *R/await.R
 94a22e739c2dd0595a35ae4db3eee745 *R/civis_ml.R
 5b0f821f2169dedd9351b23e703cf8cb *R/civis_ml_plot.R
@@ -11,7 +11,7 @@ f9bf3e96d1d62d1da80a7dc6c7213824 *LICENSE
 29f965741e11f00732cf9896aaa6abd7 *R/dbi-driver.R
 ebe2fc032ae5cba931672dfb10b146b4 *R/dbi-result.R
 8adb46c23c6885bd38c7c6c0e9894d04 *R/dplyr.R
-c5181f831b1ffe60ce6d93292a425a8c *R/generate_client.R
+8fffa32d24e11281f7b9d69e3dfca475 *R/generate_client.R
 9c86d445801eeb256bd3b9e12cb85986 *R/generated_client.R
 75d666f110c7602fbf4e26a480cb6d9e *R/io.R
 9c79ff4a24c314922d1b428a08d7e291 *R/logs.R
@@ -19,7 +19,7 @@ c5181f831b1ffe60ce6d93292a425a8c *R/generate_client.R
 07d23b13e169682d193b87ddea5951e6 *R/reports.R
 6f7d6c0fc8b9e32988c1d5f72a49bc60 *R/sysdata.rda
 35a23213e3efffdf31eba40015d5de8d *R/tables.R
-d52247acd378b06279d0639a7c897786 *R/utils.R
+3600b6def7fdc04336155f0596ff0866 *R/utils.R
 37e3ff75cabfa9df7b6328d29640871b *R/zzz.R
 bccab3f8ad97a44d5ec8ff3fde76be40 *README.md
 d3b859a6250588e678021531de45d89e *build/vignette.rds
@@ -83,6 +83,7 @@ a222780fbf6df319683ed6b4047ce50b *man/db_query_fields.CivisConnection.Rd
 45c2b12e106729d0290354e24f8df478 *man/default_credential.Rd
 ce49637269fb9bb7609f48781fd0dc96 *man/download_civis.Rd
 8dea77e4080eb7d617ef8958ed563901 *man/fetch_all.Rd
+f73d40f39429386513a1d652b258bf93 *man/fetch_and_generate_client.Rd
 c764543c40f714caa8555404860cedb9 *man/fetch_logs.Rd
 7e58ead122cdbb30bb25a22531b7168f *man/fetch_oos_scores.Rd
 e694a1e1e4bc74ef14fa73feb120237b *man/fetch_predictions.Rd
@@ -420,7 +421,7 @@ d2c91860c8d6883364a5b2c0a7a39bdb *tests/testthat/test_civis_ml_plot.R
 f2197b08f69bf73c78139cdff84451c2 *tests/testthat/test_client_base.R
 339978f19fd0bccd39b936181b98392a *tests/testthat/test_fill_text_template.R
 b74939c7434b74951afbf6fb04ccc3e0 *tests/testthat/test_io.R
-a62aa43b93142fcafd3302abfebce61a *tests/testthat/test_logs.R
+5ecab9962ca442b14d18295440874412 *tests/testthat/test_logs.R
 3c5bf3cb919cc70fc92057fefc1f1f2b *tests/testthat/test_pagination.R
 43a5086c4c8e076ffb00a0307f583bc3 *tests/testthat/test_reports.R
 b96991db9aa33fbe62df0dd61b1acf50 *tests/testthat/test_tables.R
@@ -429,7 +430,7 @@ b96991db9aa33fbe62df0dd61b1acf50 *tests/testthat/test_tables.R
 9e8c5da219274756f769d5134883ab18 *tools/generate_civis_ml_test_data.R
 2b940b1149216c0320e89a58d18f3baa *tools/generate_default_client.R
 ccca21b24faafdc689d67de20fa17f35 *tools/integration_tests/smoke_test.R
-a7bd0788a0e558268eddaa4d71669d6d *tools/run_generate_client.R
+496c5a0dde005d254d6d0a58e44f5146 *tools/run_generate_client.R
 2cd7f2c5b7d088f77d3c717bced35c1a *vignettes/civis_ml.Rmd
 ad0b5f21c909980a054158e70e8b2b4d *vignettes/concurrency.Rmd
 0a37fb220c18d220fdc08743f20a8a7f *vignettes/data_import_and_export.Rmd
