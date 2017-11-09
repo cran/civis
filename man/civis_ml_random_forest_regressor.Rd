@@ -89,7 +89,8 @@ will split if its impurity is above the threshold, otherwise it is a leaf.}
 
 \item{cross_validation_parameters}{Optional, parameter grid for learner
 parameters, e.g. \code{list(n_estimators = c(100, 200, 500),
-learning_rate = c(0.01, 0.1), max_depth = c(2, 3))}.}
+learning_rate = c(0.01, 0.1), max_depth = c(2, 3))}
+or \code{"hyperband"} for supported models.}
 
 \item{oos_scores_table}{Optional, if provided, store out-of-sample
 predictions on training set data to this Redshift "schema.tablename".}
@@ -106,13 +107,14 @@ The default is \code{"fail"}.}
 It will have \code{" Train"} or \code{" Predict"} added to become the Script title.}
 
 \item{cpu_requested}{Optional, the number of CPU shares requested in the
-Civis Platform for training jobs. 1024 shares = 1 CPU.}
+Civis Platform for training jobs or prediction child jobs.
+1024 shares = 1 CPU.}
 
 \item{memory_requested}{Optional, the memory requested from Civis Platform
-for training jobs, in MiB.}
+for training jobs or prediction child jobs, in MiB.}
 
 \item{disk_requested}{Optional, the disk space requested on Civis Platform
-for training jobs, in GB.}
+for training jobs or prediction child jobs, in GB.}
 
 \item{notifications}{Optional, model status notifications. See
 \code{\link{scripts_post_custom}} for further documentation about email
@@ -143,9 +145,9 @@ A \code{civis_ml} object, a list containing the following elements:
  A list containing the following elements:
   \itemize{
   \item run list, metadata about the run.
-  \item data list, metdata about the training data.
+  \item data list, metadata about the training data.
   \item model list, the fitted scikit-learn model.
-  \item metrics empy list.
+  \item metrics empty list.
   \item warnings list.
   \item data_platform list, training data location.
   }}
