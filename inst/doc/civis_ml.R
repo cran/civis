@@ -23,20 +23,32 @@
 #        excluded_columns = "residential_zip")
 
 ## ---- eval = FALSE-------------------------------------------------------
-#  tab       <- civis_table("sample_project.premium_training_set")
+#  tab <- civis_table("sample_project.premium_training_set")
+#  
+#  # hyperband
+#  m_hyper <- civis_ml(tab, dependent_variable = "upgrade",
+#                model_type = "random_forest_classifier",
+#                primary_key = "brandable_user_id",
+#                excluded_columns = "residential_zip",
+#                cross_validation_parameters = 'hyperband')
+#  
+#  # grid search
 #  cv_params <- list("max_depth" = c(2, 3, 5),
 #                    "n_estimators" = c(50, 100, 500))
 #  
-#  m <- civis_ml(tab, dependent_variable = "upgrade",
+#  m_grid <- civis_ml(tab, dependent_variable = "upgrade",
 #                model_type = "random_forest_classifier",
 #                primary_key = "brandable_user_id",
 #                excluded_columns = "residential_zip",
 #                cross_validation_parameters = cv_params)
 #  
-#  m <- civis_ml_random_forest_classifier(tab,
-#        primary_key = "brandable_user_id",
-#        excluded_columns = "residential_zip",
-#        cross_validation_parameters = cv_params)
+#  
+
+## ---- eval = FALSE-------------------------------------------------------
+#  m_stack <- civis_ml(tab, dependent_variable = "upgrade",
+#                model_type = "stacking_classifier",
+#                primary_key = "brandable_user_id",
+#                excluded_columns = "residential_zip")
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  m

@@ -50,7 +50,7 @@ test_that("calls scripts_post_custom", {
              disk_requested = 9,
              notifications = list(successEmailSubject = "A success",
                                   successEmailAddresses = c("user@example.com")),
-             polling_interval = 5,
+             polling_interval = .01,
              validation_data = "skip",
              n_jobs = 9,
              verbose = FALSE)
@@ -325,12 +325,14 @@ test_that("calls scripts_post_custom", {
   fake_scripts_post_custom <- mock(list(id = 999))
   fake_scripts_post_custom_runs <- mock(list(id = 888))
   fake_scripts_get_custom_runs <- mock(list(state = "running"), list(state = "succeeded"))
+  fake_scripts_get_custom <- mock(list(state = "succeeded"), cycle = TRUE)
   fake_fetch_predict_results <- mock(NULL)
 
   with_mock(
     `civis::get_database_id` = fake_get_database_id,
     `civis::scripts_post_custom` = fake_scripts_post_custom,
     `civis::scripts_post_custom_runs` = fake_scripts_post_custom_runs,
+    `civis::scripts_get_custom` = fake_scripts_get_custom,
     `civis::scripts_get_custom_runs` = fake_scripts_get_custom_runs,
     `civis::fetch_predict_results` = fake_fetch_predict_results,
 
@@ -348,7 +350,7 @@ test_that("calls scripts_post_custom", {
             cpu_requested = 2000,
             memory_requested = 10,
             disk_requested = 15,
-            polling_interval = 5,
+            polling_interval = .01,
             verbose = TRUE)
   )
 
@@ -666,7 +668,6 @@ test_that("file_id is always numeric", {
   expect_equal(run_args$arguments$CIVIS_FILE_ID, 132)
 })
 
-
 test_that("exceptions with hyperband correct", {
   fake_run_model <- mock(list(job_id = 133, run_id = 244))
   fake_civis_ml_fetch_existing <- mock(NULL)
@@ -674,16 +675,34 @@ test_that("exceptions with hyperband correct", {
   with_mock(
     `civis::run_model` = fake_run_model,
     `civis::civis_ml_fetch_existing` = fake_civis_ml_fetch_existing,
-    err1 <-  "cross_validation_parameters = \"hyperband\" not supported for sparse_logistic",
+    err <-  "cross_validation_parameters = \"hyperband\" not supported for sparse_logistic",
     expect_error(create_and_run_model(file_id = civis_file(132),
                                       model_type = "sparse_logistic",
-                                      cross_validation_parameters = "hyperband"), err1),
-    err2 <-  "cross_validation_parameters = \"hyperband\" is required for multilayer_perceptron_regressor",
-    expect_error(create_and_run_model(file_id = civis_file(132),
-                                      model_type = "multilayer_perceptron_regressor",
-                                      cross_validation_parameters = list(a = 5)), err2)
+                                      cross_validation_parameters = "hyperband"), err)
   )
 })
+
+test_that("robust if metrics.json not present", {
+  fn <- tempfile()
+  cat(jsonlite::toJSON(c("a,b,c")), file = fn)
+
+  fake_outputs <- mock(list(list(objectType = "File", objectId = 1, name = "model_info.json")))
+  fake_download <- mock(fn)
+  fake_fetch_job <- mock(1)
+  fake_fetch_run <- mock(list(state = "succeeded"))
+  fake_model_type <- mock("regressor")
+  res <- with_mock(
+    `civis::must_fetch_civis_ml_job` = fake_fetch_job,
+    `civis::must_fetch_civis_ml_run` = fake_fetch_run,
+    `civis::scripts_list_custom_runs_outputs` = fake_outputs,
+    `civis::download_civis` = fake_download,
+    `civis::model_type` = fake_model_type,
+    civis_ml_fetch_existing(123, 1)
+  )
+  expect_equal(res$model_info, c("a,b,c"))
+  expect_null(res$metrics)
+})
+
 
 
 ################################################################################

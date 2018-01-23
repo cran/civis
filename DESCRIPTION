@@ -1,6 +1,6 @@
 Package: civis
 Title: R Client for the 'Civis data science API'
-Version: 1.1.1
+Version: 1.2.0
 Authors@R: c(
   person("Patrick", "Miller", email = "pmiller@civisanalytics.com", role = c("cre", "aut")),
   person("Keith", "Ingersoll", email = "kingersoll@civisanalytics.com", role = "aut"),
@@ -29,7 +29,7 @@ Collate: 'await.R' 'civis_future.R' 'civis_ml.R' 'civis_ml_plot.R'
         'pagination_helpers.R' 'reports.R' 'rstudio.R' 'tables.R'
         'utils.R' 'zzz.R'
 NeedsCompilation: no
-Packaged: 2017-11-21 16:45:43 UTC; pmiller
+Packaged: 2018-01-23 20:09:54 UTC; pmiller
 Author: Patrick Miller [cre, aut],
   Keith Ingersoll [aut],
   Bill Lattner [ctb],
@@ -39,4 +39,4 @@ Author: Patrick Miller [cre, aut],
   Danning Chen [ctb]
 Maintainer: Patrick Miller <pmiller@civisanalytics.com>
 Repository: CRAN
-Date/Publication: 2017-11-21 16:58:02 UTC
+Date/Publication: 2018-01-23 20:20:50 UTC
