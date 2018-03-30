@@ -59,6 +59,7 @@ read_civis <- function(x, ...) {
 #' @export
 read_civis.numeric <- function(x, using = readRDS, verbose = FALSE, ...) {
   stopifnot(is.function(using))
+  if (is.na(x)) stop("File ID cannot be NA.")
   fn <- tempfile()
   tryCatch({
     download_civis(x, fn)
@@ -145,6 +146,7 @@ read_civis.sql <- function(x, database = NULL, using = utils::read.csv,
 #' @param delimiter string, optional. Which delimiter to use. One of
 #' \code{','}, \code{'\\t'} or \code{'|'}.
 #' @param hidden bool, if \code{TRUE} (default), this job will not appear in the Civis UI.
+#' @param diststyle string optional. The diststyle to use for the table. One of "even", "all", or "key".
 #' @param ... arguments passed to \code{write.csv}.
 #' @seealso \code{\link{refresh_table}} to update table meta-data.
 #'
@@ -181,14 +183,22 @@ write_civis <- function(x, ...) {
 #' @export
 write_civis.data.frame <- function(x, tablename, database = NULL, if_exists="fail",
                         distkey = NULL, sortkey1 = NULL, sortkey2 = NULL,
-                        max_errors = NULL, verbose = FALSE, ...) {
+                        max_errors = NULL, verbose = FALSE, hidden = TRUE, diststyle = NULL, ...) {
   db <- get_db(database)
   tryCatch({
     filename <- tempfile(fileext = ".csv")
     utils::write.csv(x, filename, row.names = FALSE, na = "", ...)
-    write_civis.character(filename, tablename, database = db, if_exists,
-                 distkey, sortkey1, sortkey2, max_errors,
-                 verbose)
+    write_civis.character(x = filename,
+                          tablename = tablename,
+                          database = db,
+                          if_exists = if_exists,
+                          distkey = distkey,
+                          sortkey1 = sortkey1,
+                          sortkey2 = sortkey2,
+                          max_errors = max_errors,
+                          verbose = verbose,
+                          hidden = hidden,
+                          diststyle = diststyle)
   }, finally = {
     unlink(filename)
   })
@@ -198,11 +208,18 @@ write_civis.data.frame <- function(x, tablename, database = NULL, if_exists="fai
 #' @export
 write_civis.character <- function(x, tablename, database = NULL, if_exists = "fail",
                          distkey = NULL, sortkey1 = NULL, sortkey2 = NULL,
-                         max_errors = NULL, verbose = FALSE, ...) {
+                         max_errors = NULL, verbose = FALSE, hidden = TRUE, diststyle = NULL, ...) {
     db <- get_db(database)
     stopifnot(file.exists(x))
-    job_r <- start_import_job(db, tablename, if_exists, distkey,
-                              sortkey1, sortkey2, max_errors)
+    job_r <- start_import_job(database = db,
+                              tablename = tablename,
+                              if_exists = if_exists,
+                              diststyle = diststyle,
+                              distkey = distkey,
+                              sortkey1 = sortkey1,
+                              sortkey2 = sortkey2,
+                              max_errors = max_errors,
+                              hidden = hidden)
     put_r <- httr::PUT(job_r[["uploadUri"]], body = httr::upload_file(x))
     if (put_r$status_code != 200) {
       msg <- httr::content(put_r)
@@ -220,7 +237,8 @@ write_civis.character <- function(x, tablename, database = NULL, if_exists = "fa
 write_civis.numeric <- function(x, tablename, database = NULL, if_exists = "fail",
                                 distkey = NULL, sortkey1 = NULL, sortkey2 = NULL,
                                 max_errors = NULL, verbose = FALSE,
-                                delimiter = ",", hidden = TRUE, ...) {
+                                delimiter = ",", hidden = TRUE, diststyle = NULL, ...) {
+  if (is.na(x)) stop("File ID cannot be NA.")
   db <- get_db(database)
   db_id <- get_database_id(db)
   cred_id <- default_credential()
@@ -237,6 +255,7 @@ write_civis.numeric <- function(x, tablename, database = NULL, if_exists = "fail
   options <- list(max_errors = max_errors,
                   existing_table_rows = if_exists,
                   distkey = distkey,
+                  diststyle = diststyle,
                   sortkey1 = sortkey1,
                   sortkey2 = sortkey2,
                   column_delimiter = delimiter)
@@ -244,7 +263,7 @@ write_civis.numeric <- function(x, tablename, database = NULL, if_exists = "fail
   imports_post_syncs(job$id,
                      source = list(file = list(id = x)),
                      destination = list(database_table =
-                                          list(schema = parts$schema, table = parts$table)),
+                                        list(schema = parts$schema, table = parts$table)),
                      advanced_options = options)
   run <- jobs_post_runs(job$id)
   await(jobs_get_runs, id = job$id, run_id = run$id, .verbose = verbose)
@@ -311,8 +330,15 @@ write_civis_file.default <- function(x, name = 'r-object.rds', expires_at = NULL
 
 #' @describeIn write_civis_file Upload a text file to Civis Platform (Files endpoint).
 #' @export
-write_civis_file.character <- function(x, name, expires_at = NULL, ...) {
-  stopifnot(file.exists(x))
+write_civis_file.character <- function(x, name = x, expires_at = NULL, ...) {
+  if (length(x) > 1 || !file.exists(x)) {
+    err <- ifelse(length(x) > 1,
+                  "'x' has length > 1.",
+                  "File 'x' does not exist.")
+    msg <- paste(err, "If 'x' is a character vector to be uploaded rather",
+                 "than a filename, try write_civis_file(as.list(x), ...)")
+    stop(msg)
+  }
   size <- file.size(x)
   if (size > MAX_FILE_SIZE) stop("File larger than 5tb, can't upload.")
   if (size > MIN_MULTIPART_SIZE) {
@@ -456,6 +482,7 @@ download_civis.sql <- function(x, database = NULL, file,
 download_civis.numeric <- function(x, file,
                                    overwrite = FALSE, progress = FALSE,
                                    ...) {
+  if (is.na(x)) stop("File ID cannot be NA.")
   if (!overwrite & file.exists(file)) {
     stop("File already exists. To overwrite, set overwrite = TRUE.")
   }
@@ -505,7 +532,7 @@ download_civis.numeric <- function(x, file,
 #'   \item query: the executed query
 #'   \item entries: a list containing presigned urls for each csv part
 #'   \item compression: the type of compression on each csv part
-#'   \item delimiter: the delimiter used to seperate fields
+#'   \item delimiter: the delimiter used to separate fields
 #'   \item unquoted: whether fields are quoted
 #' }
 #'
@@ -535,7 +562,7 @@ civis_to_multifile_csv <- function(sql, database, job_name = NULL, hidden = TRUE
   }
 
   column_delimiter <- delimiter_name_from_string(delimiter)
-  job_name <- ifelse(is.null(job_name), "civis Export", job_name)
+  job_name <- ifelse(is.null(job_name), "Civis Export", job_name)
   filename_prefix <- if (is.null(prefix)) "" else prefix
   csv_settings = list(include_header = include_header,
                       compression = compression,
@@ -575,6 +602,7 @@ civis_to_multifile_csv <- function(sql, database, job_name = NULL, hidden = TRUE
 #' }
 #'
 #' @export
+#' @seealso io
 query_civis <- function(x, ...) {
   UseMethod("query_civis")
 }
@@ -591,6 +619,7 @@ query_civis.sql <- function(x, database = NULL, verbose = FALSE, ...) {
 #' @export
 #' @describeIn query_civis Run a SQL query from a previous SQL query id.
 query_civis.numeric <- function(x, verbose = FALSE, ...) {
+  if (is.na(x)) stop("Query ID cannot be NA.")
   r <- queries_post_runs(x)
   await(queries_get_runs, id = r$queryId, run_id = r$id, .verbose = verbose)
 }
@@ -603,6 +632,79 @@ query_civis.character <- function(x, database = NULL, verbose = FALSE, ...) {
   cred_id <- default_credential()
   q_id <- queries_post(db_id, x, preview_rows = 0, credential = cred_id, ...)[["id"]]
   await(queries_get, id = q_id, .verbose = verbose)
+}
+
+#' Export results from a query to S3 and return a file id.
+#'
+#' Exports results from a Redshift SQL query, and returns the id of the file on S3 for use
+#' with \code{\link{read_civis}} or \code{\link{download_civis}}.
+#'
+#' @param x "schema.table", \code{sql("query")}, or a sql script job id.
+#' @param database string, Name of database where data frame is to be uploaded.
+#' If no database is specified, uses \code{options(civis.default_db)}.
+#' @param job_name string, Name of the job (default: \code{"Civis S3 Export Via R Client"}).
+#' @param hidden bool, Whether the job is hidden.
+#' @param verbose bool, Set to TRUE to print intermediate progress indicators.
+#' @param csv_settings See \code{\link{scripts_post_sql}} for details.
+#' @param ... Currently ignored.
+#' @export
+#' @family io
+#' @details
+#' By default, the export uses the default csv_settings in \code{\link{scripts_post_sql}},
+#' which is a gzipped csv.
+#' @examples
+#' \dontrun{
+#' id <- query_civis_file("schema.tablename", database = "my_database")
+#' df <- read_civis(id, using = read.csv)
+#'
+#' query <- sql("SELECT * FROM table JOIN other_table USING id WHERE var1 < 23")
+#' id <- query_civis_file(query)
+#' df <- read_civis(id, using = read.csv)
+#'
+#' id <- query_civis_file(query_id)
+#' df <- read_civis(id, using = read.csv)
+#' }
+query_civis_file <- function(x, ...){
+  UseMethod("query_civis_file")
+}
+
+#' @export
+#' @describeIn query_civis_file Export a \code{"schema.table"} to a file id.
+query_civis_file.character <- function(x, database = NULL, job_name = NULL, hidden = TRUE,
+                                       verbose = verbose, csv_settings = NULL, ...) {
+  if (stringr::str_detect(tolower(x), "\\bselect\\b")) {
+    msg <- c("Argument x should be \"schema.tablename\". Did you mean x = sql(\"...\")?")
+    stop(msg)
+  }
+  sql_str <- sql(paste0("SELECT * FROM ", x))
+  query_civis_file.sql(sql_str, database = database)
+}
+
+#' @export
+#' @describeIn query_civis_file Export results of a query to a file id.
+query_civis_file.sql <- function(x, database = NULL, job_name = NULL, hidden = TRUE,
+                                 verbose = FALSE, csv_settings = NULL, ...) {
+  x <- as.character(x)
+  db <- get_db(database)
+  cred_id <- default_credential()
+  if (is.null(job_name)) job_name <- "Civis S3 Export Via R Client"
+  run <- start_scripted_sql_job(database = db,
+                                sql = x,
+                                job_name = job_name,
+                                hidden = hidden,
+                                csv_settings = csv_settings)
+  res <- await(scripts_get_sql_runs,
+               id = run$script_id, run_id = run$run_id, .verbose = verbose)
+  res$output[[1]]$fileId
+}
+
+#' @export
+#' @describeIn query_civis_file Run an existing sql script and return the file id of the results on S3.
+query_civis_file.numeric <- function(x, database = NULL, verbose = FALSE, ...) {
+  if (is.na(x)) stop("Query ID cannot be NA.")
+  run <- scripts_post_sql_runs(x)
+  res <- await(scripts_get_sql_runs, id = x, run_id = run$id, .verbose = verbose)
+  res$output[[1]]$fileId
 }
 
 # Kick off a scripted sql job
@@ -676,7 +778,7 @@ write_chunks <- function(file, chunk_size) {
 
 # Kick off a job to send data to the civis platform
 start_import_job <- function(database, tablename, if_exists, distkey,
-                             sortkey1, sortkey2, max_errors) {
+                             sortkey1, sortkey2, max_errors, hidden, diststyle) {
   if (!if_exists %in% c("fail", "truncate", "append", "drop")) {
     stop('if_exists must be set to "fail", "truncate", "append", or "drop"')
   }
@@ -695,11 +797,13 @@ start_import_job <- function(database, tablename, if_exists, distkey,
                                      credential_id = creds,
                                      max_errors = max_errors,
                                      existing_table_rows = if_exists,
+                                     diststyle = diststyle,
                                      distkey = distkey,
                                      sortkey1 = sortkey1,
                                      sortkey2 = sortkey2,
                                      column_delimiter = "comma",
-                                     first_row_is_header = TRUE)
+                                     first_row_is_header = TRUE,
+                                     hidden = hidden)
   job_response
 }
 

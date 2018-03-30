@@ -71,6 +71,13 @@
 #'   data for validation, and \code{skip}, which skips the validation step.
 #' @param verbose Optional, If \code{TRUE}, supply debug outputs in Platform
 #'   logs and make prediction child jobs visible.
+#' @param dvs_to_predict Optional, For scoring, this should be a vector of column
+#'   names of dependent variables to include in the output table. It must be a
+#'   subset of the \code{dependent_variable} vector provided for training.
+#'   The scores for the returned subset will be identical to the scores which
+#'   those outputs would have had if all outputs were written, but ignoring some
+#'   of the model's outputs will let predictions complete faster and use less disk space.
+#'   If not provided, the entire model output will be written to the output table.
 #' @param \dots Unused
 #'
 #' @section CivisML Workflows:
@@ -91,30 +98,29 @@
 #'  \code{gradient_boosting_classifier} \tab	\code{\link{civis_ml_gradient_boosting_classifier}} \tab classification \tab	\href{http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html}{GradientBoostingClassifier} \tab	\code{n_estimators=500, max_depth=2} \cr
 #'  \code{random_forest_classifier} \tab	\code{\link{civis_ml_random_forest_classifier}} \tab classification \tab	\href{http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html}{RandomForestClassifier} \tab	\code{n_estimators=500} \cr
 #'  \code{extra_trees_classifier} \tab	\code{\link{civis_ml_extra_trees_classifier}} \tab classification \tab	\href{http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesClassifier.html}{ExtraTreesClassifier} \tab	\code{n_estimators=500} \cr
-#'  \code{multilayer_perceptron_classifier} \tab \tab classification \tab \href{https://github.com/civisanalytics/muffnn}{MLPClassifier} \tab \cr
+#'  \code{multilayer_perceptron_classifier} \tab \tab classification \tab \href{https://github.com/civisanalytics/muffnn}{muffnn.MLPClassifier} \tab \cr
 #'  \code{stacking_classifier} \tab \tab classification  \tab \href{https://github.com/civisanalytics/civisml-extensions}{StackedClassifier}\tab \cr
 #'  \code{sparse_linear_regressor} \tab \code{\link{civis_ml_sparse_linear_regressor}} \tab	regression \tab	\href{http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html}{LinearRegression} \tab \cr
 #'  \code{sparse_ridge_regressor} \tab	\code{\link{civis_ml_sparse_ridge_regressor}} \tab regression \tab	\href{http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html}{Ridge} \tab \cr
 #'  \code{gradient_boosting_regressor}	\tab \code{\link{civis_ml_gradient_boosting_regressor}} \tab regression \tab \href{http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html}{GradientBoostingRegressor} \tab \code{n_estimators=500, max_depth=2} \cr
 #'  \code{random_forest_regressor}	\tab \code{\link{civis_ml_random_forest_regressor}} \tab regression \tab \href{http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html}{RandomForestRegressor} \tab \code{n_estimators=500} \cr
 #'  \code{extra_trees_regressor} \tab \code{\link{civis_ml_extra_trees_regressor}} \tab regression	\tab \href{http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html}{ExtraTreesRegressor} \tab \code{n_estimators=500} \cr
-#'  \code{multilayer_perceptron_regressor} \tab \tab regression \tab \href{https://github.com/civisanalytics/muffnn}{MLPRegressor} \tab \cr
+#'  \code{multilayer_perceptron_regressor} \tab \tab regression \tab \href{https://github.com/civisanalytics/muffnn}{muffnn.MLPRegressor} \tab \cr
 #'  \code{stacking_regressor} \tab \tab regression  \tab \href{https://github.com/civisanalytics/civisml-extensions}{StackedRegressor}\tab \cr
 #' }
 #' Model names can be easily accessed using the global variables \code{CIVIS_ML_REGRESSORS} and \code{CIVIS_ML_CLASSIFIERS}.
 #' @section Stacking:
 #'
-#' The \code{"stacking_classifier"} model stacks
-#' together the \code{"sparse_logistic"}, \code{"gradient_boosting_classifier"},
-#' and \code{"random_forest_classifier"} models, using altered defaults as
-#' listed for each in the \code{"Altered Defaults"} column of the table
-#' above. The models are combined using a pipeline
-#' containing a \href{http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.Normalizer.html#sklearn.preprocessing.Normalizer}{Normalizer}
-#' step, followed by a \href{http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegressionCV.html}{LogisticRegressionCV}
-#' with \code{penalty='l2'} and \code{tol=1e-08}. The
-#' \code{"stacking_regressor"} works similarly, stacking together the
-#' \code{"sparse_linear_regressor"}, \code{"gradient_boosting_regressor"},
-#' and \code{"random_forest_regressor"} models, and combining them using
+#' The \code{"stacking_classifier"} model stacks together the \code{"gradient_boosting_classifier"} and
+#' \code{"random_forest_classifier"} predefined models together with a
+#' \code{glmnet.LogitNet(alpha=0, n_splits=4, max_iter=10000, tol=1e-5, scoring='log_loss')}.
+#' Defaults for the predefined models are documented in \code{?civis_ml}. Each column is first
+#' \href{http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html}{standardized},
+#' and then the model predictions are combined using
+#' \href{http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegressionCV.html}{LogisticRegressionCV}
+#' with \code{penalty='l2'} and \code{tol=1e-08}. The \code{"stacking_regressor"} works similarly, stacking together
+#' the \code{"gradient_boosting_regressor"} and \code{"random_forest_regressor"} models and a
+#' \code{glmnet.ElasticNet(alpha=0, n_splits=4, max_iter=10000, tol=1e-5, scoring='r2')}, combining them using
 #' \href{https://github.com/civisanalytics/civisml-extensions}{NonNegativeLinearRegression}.
 #'  The estimators that are being stacked have the same names as the
 #' associated pre-defined models, and the meta-estimator steps are named
@@ -320,9 +326,7 @@ civis_ml.data.frame <- function(x,
     oos_scores_db_id <- get_database_id(oos_scores_db)
   }
 
-  tmp_path <- tempfile()
-  utils::write.csv(x, file = tmp_path, row.names = FALSE)
-  file_id <- write_civis_file(tmp_path, "modelpipeline_data.csv")
+  file_id <- stash_local_dataframe(x)
   create_and_run_model(file_id = file_id,
                        dependent_variable = dependent_variable,
                        excluded_columns = excluded_columns,
@@ -508,6 +512,30 @@ civis_ml.character <- function(x,
                        verbose = verbose)
 }
 
+#' Stash a data frame in feather or csv format, depending on CivisML version.
+#'
+#' @param x data.frame to stash
+#'
+#' @return file id where dataframe is stored
+stash_local_dataframe <- function(x) {
+  # Try to stash a dataframe in feather format.
+  tmpl_id <- getOption("civis.ml_train_template_id")
+  tmp_path <- tempfile()
+
+  if (tmpl_id > 9969) {
+    # newer versions use feather
+    feather::write_feather(x, tmp_path)
+    civis_path <- "modelpipeline_data.feather"
+  } else {
+    # older versions can't use feather
+    utils::write.csv(x, file = tmp_path, row.names = FALSE)
+    civis_path <- "modelpipeline_data.csv"
+  }
+
+  file_id <- write_civis_file(tmp_path, name = civis_path)
+  return(file_id)
+}
+
 create_and_run_model <- function(file_id = NULL,
                                  table_name = NULL,
                                  database_id = NULL,
@@ -686,7 +714,12 @@ civis_ml_fetch_existing <- function(model_id, run_id = NULL) {
     metrics <- tryCatch(must_fetch_output_json(outputs, "metrics.json"),
                         error = function(e) NULL)
     model_info <- must_fetch_output_json(outputs, "model_info.json")
+    # re-raise any CivisML warnings
+    if (length(model_info$warnings) > 0) {
+      warning("CivisML issued the following warnings during training:\n", unlist(model_info$warnings))
+    }
   }
+
   type <- model_type(job)
 
   structure(
@@ -752,6 +785,7 @@ predict.civis_ml <- function(object,
                              disk_requested = NULL,
                              polling_interval = NULL,
                              verbose = FALSE,
+                             dvs_to_predict = NULL,
                              ...) {
 
   output_db_id <- NULL
@@ -811,6 +845,10 @@ predict.civis_ml <- function(object,
     pred_args[["sql_limit"]] <- newdata$sql_limit
   }
 
+  if (!is.null(dvs_to_predict)) {
+    pred_args[["dvs_to_predict"]] <- paste(dvs_to_predict, collapse = " ")
+  }
+
   do.call(create_and_run_pred, pred_args)
 }
 
@@ -834,7 +872,8 @@ create_and_run_pred <- function(train_job_id = NULL,
                                 disk_requested = NULL,
                                 polling_interval = NULL,
                                 notifications = NULL,
-                                verbose = FALSE) {
+                                verbose = FALSE,
+                                dvs_to_predict = NULL) {
   args <- list(
     TRAIN_JOB = train_job_id,
     TRAIN_RUN = train_run_id,
@@ -883,6 +922,10 @@ create_and_run_pred <- function(train_job_id = NULL,
     args[["DISK_SPACE"]] <- disk_requested
   }
 
+  if (!is.null(dvs_to_predict)) {
+    args[["TARGET_COLUMN"]] <- paste(dvs_to_predict, collapse = " ")
+  }
+
   args <- I(args)
 
   job_name <- NULL
@@ -902,6 +945,11 @@ fetch_predict_results <- function(job_id, run_id) {
   run <- scripts_get_custom_runs(job_id, run_id)
   outputs <- scripts_list_custom_runs_outputs(job_id, run_id)
   model_info <- must_fetch_output_json(outputs, "model_info.json")
+
+  # re-raise any CivisML warnings
+  if (length(model_info$warnings) > 0) {
+    warning("CivisML issued the following warnings during training:\n", unlist(model_info$warnings))
+  }
 
   structure(
     list(

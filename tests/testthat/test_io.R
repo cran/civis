@@ -87,6 +87,11 @@ test_that("read_civis.numeric reads a csv", {
   )
 })
 
+test_that("read_civis.numeric fails for NA", {
+  msg <- "File ID cannot be NA."
+  expect_error(read_civis(as.numeric(NA)), msg)
+})
+
 # write_civis -----------------------------------------------------------------
 
 test_that("write_civis.character returns meta data if successful", {
@@ -170,6 +175,7 @@ test_that("write_civis.numeric calls imports_post_syncs correctly", {
                 advanced_options = list(max_errors = NULL,
                      existing_table_rows = "fail",
                      distkey = NULL,
+                     diststyle = NULL,
                      sortkey1 = NULL,
                      sortkey2 = NULL,
                      column_delimiter = "comma"))
@@ -185,10 +191,19 @@ test_that("write_civis fails if no db given and default not provided", {
   )
 })
 
+test_that("write_civis.numeric fails for NA", {
+  msg <- "File ID cannot be NA."
+  expect_error(write_civis(as.numeric(NA)), msg)
+})
+
 test_that("write_civis_file fails if file doesn't exist", {
-  msg <- "file.exists(x) is not TRUE"
-  err_msg <- tryCatch(write_civis_file("asdf"), error = function(e) e$message)
-  expect_equal(msg, err_msg)
+  regexp <- "File 'x' does not exist.*"
+  expect_error(write_civis_file("asdf"), regexp)
+})
+
+test_that("write_civis_file fails if character vector length 2 is passed", {
+  regexp <- "'x' has length > 1.*"
+  expect_error(write_civis_file(c('fake', 'paths')), regexp)
 })
 
 test_that("write_civis_file.character returns a file id", {
@@ -241,6 +256,12 @@ test_that("download_civis raises an error if destination file already exists", {
   file.remove(local_file) # Clean up after testing
 })
 
+test_that("download_civis.numeric fails for NA", {
+  msg <- "File ID cannot be NA."
+  expect_error(write_civis(as.numeric(NA)), msg)
+})
+
+
 # query_civis -----------------------------------------------------------------
 
 test_that("query_civis returns object from await", {
@@ -251,6 +272,42 @@ test_that("query_civis returns object from await", {
     `civis::queries_get` = function(...) list(state = 'succeeded'),
     expect_equal(get_status(query_civis("query", "database")), 'succeeded')
   )
+})
+
+test_that("query_civis.numeric fails for NA", {
+  msg <- "Query ID cannot be NA."
+  expect_error(query_civis(as.numeric(NA)), msg)
+})
+
+test_that("query_civis_file.sql works", {
+  with_mock(
+    `civis::get_database_id` = function(...) TRUE,
+    `civis::get_db` = function(...) "asdf",
+    `civis::default_credential` = function(...) TRUE,
+    `civis:::start_scripted_sql_job` = function(...) list(script_id = 1, run_id = 1),
+    `civis::scripts_get_sql_runs` = function(...) list(state = "succeeded",
+                                                       output = list(list(fileId = 1))),
+    expect_equal(query_civis_file(sql("asdf")), 1)
+  )
+})
+
+test_that("query_civis_file.character errors if not schema.tablename", {
+  msg <- 'Argument x should be "schema.tablename". Did you mean x = sql("...")?'
+  expect_error(query_civis_file("select asdf"), msg)
+})
+
+test_that("query_civis_file.numeric works", {
+  with_mock(
+    `civis::scripts_post_sql_runs` = function(...) list(id = 333),
+    `civis::scripts_get_sql_runs` = function(...) list(state = "succeeded",
+                                                       output = list(list(fileId = 1))),
+    expect_equal(query_civis_file(234), 1)
+  )
+})
+
+test_that("query_civis_file.numeric fails for NA", {
+  msg <- "Query ID cannot be NA"
+  expect_error(query_civis(as.numeric(NA), msg))
 })
 
 test_that("transfer_table succeeds", {
@@ -345,7 +402,7 @@ test_that("start_import_job parses table correctly", {
     },
     expect_equal(
       start_import_job("mockdb", "mock.table", if_exists = "append",
-                       NULL, NULL, NULL, NULL),
+                       NULL, NULL, NULL, NULL, NULL, NULL),
       list(schema = "mock", table = "table")
     )
   )

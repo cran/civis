@@ -1,4 +1,5 @@
 library(mockery)
+
 context("civis_ml")
 
 test_that("jsonlite works", {
@@ -558,6 +559,47 @@ test_that("passes table info", {
 })
 
 ################################################################################
+context("stash_local_dataframe")
+
+test_that("newer CivisML versions use feather", {
+  # enforce newer CivisML version
+  temp_id <- getOption('civis.ml_train_template_id')
+  options(civis.ml_train_template_id = 10582)
+  # factor should not cause errors when using feather
+  x <- data.frame(a = 1:3, b = letters[1:3])
+  fake_file <- mock(1)
+  with_mock(
+    `civis::write_civis_file` = fake_file,
+    {
+      stash_local_dataframe(x)
+      args <- mock_args(fake_file)
+      expect_equal(args[[1]]$name, "modelpipeline_data.feather")
+    }
+  )
+  # cleanup
+  options(civis.ml_train_template_id = temp_id)
+})
+
+test_that("older CivisML versions use csv", {
+  # enforce older CivisML version
+  temp_id <- getOption('civis.ml_train_template_id')
+  options(civis.ml_train_template_id = 9969)
+  # factor type should not matter for older version
+  x <- data.frame(a = 1:3, b = letters[1:3], stringsAsFactors = FALSE)
+  fake_file <- mock(1)
+  with_mock(
+    `civis::write_civis_file` = fake_file,
+    {
+      stash_local_dataframe(x)
+      args <- mock_args(fake_file)
+      expect_equal(args[[1]]$name, "modelpipeline_data.csv")
+    }
+  )
+  # cleanup
+  options(civis.ml_train_template_id = temp_id)
+})
+
+################################################################################
 # run build model
 context("create_and_run_model")
 
@@ -684,7 +726,7 @@ test_that("exceptions with hyperband correct", {
 
 test_that("robust if metrics.json not present", {
   fn <- tempfile()
-  cat(jsonlite::toJSON(c("a,b,c")), file = fn)
+  cat(jsonlite::toJSON(list(a=1, b=letters[1:3])), file = fn)
 
   fake_outputs <- mock(list(list(objectType = "File", objectId = 1, name = "model_info.json")))
   fake_download <- mock(fn)
@@ -699,7 +741,7 @@ test_that("robust if metrics.json not present", {
     `civis::model_type` = fake_model_type,
     civis_ml_fetch_existing(123, 1)
   )
-  expect_equal(res$model_info, c("a,b,c"))
+  expect_equal(res$model_info, list(a=1, b=letters[1:3]))
   expect_null(res$metrics)
 })
 
