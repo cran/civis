@@ -3,40 +3,7 @@ context("io")
 
 # read_civis ------------------------------------------------------------------
 
-test_that("read_civis reads < 2gb files from memory", {
-  mock_df_string <- "a,b\n1,sentimental\n2,centipede"
-  con <- textConnection(mock_df_string)
-  mock_df <- read.csv(con)
-  close(con)
-  rm(con)
-  mock_sql_job <- function(...) list(script_id = 1337, run_id = 007)
-  mock_GET_result <- function(...) {
-
-    GET_result <- list("url" = "http://www.fakeurl.com",
-                       "headers" = list("Content-Type" = "text/csv"),
-                       "content" = charToRaw(mock_df_string))
-    class(GET_result) <- "response"
-    return(GET_result)
-  }
-  mock_get_sql_runs <- function(...) {
-    list(state = "succeeded",
-         output = list(list(fileId = 1234))
-    )
-  }
-  with_mock(
-    `civis::start_scripted_sql_job` = mock_sql_job,
-    `civis::scripts_post_sql_runs` = function(...) list(id = 1001),
-    `civis::scripts_get_sql_runs` = mock_get_sql_runs,
-    `civis::files_get` = function(...) list(fileSize = 10),
-    `civis::download_script_results` = mock_GET_result,
-    `civis::stop_for_status` = function(...) return(TRUE),
-    expect_equal(mock_df, read_civis(x = "lazy", database = "jellyfish")),
-    expect_equal(mock_df, read_civis(dbplyr::sql("SELECT * FROM lazy"),
-                                     database = "jellyfish"))
-  )
-})
-
-test_that("read_civis.sql reads > 2gb files from file", {
+test_that("read_civis.sql reads csvs", {
   mock_df <- data.frame(a = 1:2, b = c("sentimental", "centipede"))
   mock_get_sql_runs <- function(...) {
     list(state = "succeeded",
@@ -211,7 +178,7 @@ test_that("write_civis_file.character returns a file id", {
   with_mock(
     `civis::files_post` = function(...) list(uploadFields = list("fakeurl.com"), id = 5),
     `httr::upload_file` = function(...) "the file",
-    `httr::POST` = function(...) structure(list(status_code = 200), class = "response"),
+    `httr::RETRY` = function(...) structure(list(status_code = 200), class = "response"),
      expect_equal(write_civis_file("mockfile.txt", name = "mockfile.txt"), 5)
   )
   unlink("mockfile.txt")
@@ -222,7 +189,7 @@ test_that("write_civis_file.default returns a file id", {
   with_mock(
     `civis::files_post` = function(...) list(uploadFields = list("fakeurl.com"), id = 5),
     `httr::upload_file` = function(...) "the file",
-    `httr::POST` = function(...) structure(list(status_code = 200), class = "response"),
+    `httr::RETRY` = function(...) structure(list(status_code = 200), class = "response"),
     expect_equal(write_civis_file(mock_df), 5),
     expect_equal(write_civis_file(as.list(mock_df)), 5),
     expect_equal(write_civis_file(1:3), 5)

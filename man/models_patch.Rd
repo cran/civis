@@ -45,11 +45,11 @@ models_patch(id, table_name = NULL, database_id = NULL,
 
 \item{active_build_id}{integer optional. The ID of the current active build, the build used to score predictions.}
 
-\item{cross_validation_parameters}{object optional. Cross validation parameter grid for tree methods, e.g. {"n_estimators": [100, 200, 500], "learning_rate": [0.01, 0.1], "max_depth": [2, 3]}.}
+\item{cross_validation_parameters}{list optional. Cross validation parameter grid for tree methods, e.g. {"n_estimators": [100, 200, 500], "learning_rate": [0.01, 0.1], "max_depth": [2, 3]}.}
 
 \item{number_of_folds}{integer optional. Number of folds for cross validation. Default value is 5.}
 
-\item{notifications}{object optional. A list containing the following elements: 
+\item{notifications}{list optional. A list containing the following elements: 
 \itemize{
 \item urls array, URLs to receive a POST request at job completion
 \item successEmailSubject string, Custom subject line for success e-mail.
@@ -63,13 +63,13 @@ models_patch(id, table_name = NULL, database_id = NULL,
 \item failureOn boolean, If failure email notifications are on.
 }}
 
-\item{schedule}{object optional. A list containing the following elements: 
+\item{schedule}{list optional. A list containing the following elements: 
 \itemize{
-\item scheduled boolean, If the object is scheduled
-\item scheduledDays array, Day based on numeric value starting at 0 for Sunday
-\item scheduledHours array, Hours of the day it is scheduled on
-\item scheduledMinutes array, Minutes of the day it is scheduled on
-\item scheduledRunsPerHour integer, Alternative to scheduled minutes, number of times to run per hour
+\item scheduled boolean, If the item is scheduled.
+\item scheduledDays array, Day based on numeric value starting at 0 for Sunday.
+\item scheduledHours array, Hours of the day it is scheduled on.
+\item scheduledMinutes array, Minutes of the day it is scheduled on.
+\item scheduledRunsPerHour integer, Alternative to scheduled minutes, number of times to run per hour.
 }}
 
 \item{parent_id}{integer optional. The ID of the parent job that will trigger this model.}

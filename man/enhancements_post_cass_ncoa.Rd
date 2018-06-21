@@ -10,25 +10,25 @@ enhancements_post_cass_ncoa(name, source, schedule = NULL, parent_id = NULL,
   ncoa_credential_id = NULL, output_level = NULL, limiting_sql = NULL)
 }
 \arguments{
-\item{name}{string required. The name of the enhancement.}
+\item{name}{string required. The name of the enhancement job.}
 
-\item{source}{object required. A list containing the following elements: 
+\item{source}{list required. A list containing the following elements: 
 \itemize{
 \item databaseTable object, 
 }}
 
-\item{schedule}{object optional. A list containing the following elements: 
+\item{schedule}{list optional. A list containing the following elements: 
 \itemize{
-\item scheduled boolean, If the object is scheduled
-\item scheduledDays array, Day based on numeric value starting at 0 for Sunday
-\item scheduledHours array, Hours of the day it is scheduled on
-\item scheduledMinutes array, Minutes of the day it is scheduled on
-\item scheduledRunsPerHour integer, Alternative to scheduled minutes, number of times to run per hour
+\item scheduled boolean, If the item is scheduled.
+\item scheduledDays array, Day based on numeric value starting at 0 for Sunday.
+\item scheduledHours array, Hours of the day it is scheduled on.
+\item scheduledMinutes array, Minutes of the day it is scheduled on.
+\item scheduledRunsPerHour integer, Alternative to scheduled minutes, number of times to run per hour.
 }}
 
 \item{parent_id}{integer optional. Parent ID that triggers this enhancement.}
 
-\item{notifications}{object optional. A list containing the following elements: 
+\item{notifications}{list optional. A list containing the following elements: 
 \itemize{
 \item urls array, URLs to receive a POST request at job completion
 \item successEmailSubject string, Custom subject line for success e-mail.
@@ -42,12 +42,12 @@ enhancements_post_cass_ncoa(name, source, schedule = NULL, parent_id = NULL,
 \item failureOn boolean, If failure email notifications are on.
 }}
 
-\item{destination}{object optional. A list containing the following elements: 
+\item{destination}{list optional. A list containing the following elements: 
 \itemize{
 \item databaseTable object, 
 }}
 
-\item{column_mapping}{object optional. A list containing the following elements: 
+\item{column_mapping}{list optional. A list containing the following elements: 
 \itemize{
 \item address1 string, The first address line.
 \item address2 string, The second address line.
@@ -71,11 +71,11 @@ enhancements_post_cass_ncoa(name, source, schedule = NULL, parent_id = NULL,
 \value{
 A list containing the following elements:
 \item{id}{integer, The ID for the enhancement.}
-\item{name}{string, The name of the enhancement.}
+\item{name}{string, The name of the enhancement job.}
 \item{type}{string, The type of the enhancement (e.g CASS-NCOA)}
 \item{createdAt}{string, The time this enhancement was created.}
 \item{updatedAt}{string, The time the enhancement was last updated.}
-\item{author}{object, A list containing the following elements: 
+\item{author}{list, A list containing the following elements: 
 \itemize{
 \item id integer, The ID of this user.
 \item name string, This user's name.
@@ -84,16 +84,16 @@ A list containing the following elements:
 \item online boolean, Whether this user is online.
 }}
 \item{state}{string, The status of the enhancement's last run}
-\item{schedule}{object, A list containing the following elements: 
+\item{schedule}{list, A list containing the following elements: 
 \itemize{
-\item scheduled boolean, If the object is scheduled
-\item scheduledDays array, Day based on numeric value starting at 0 for Sunday
-\item scheduledHours array, Hours of the day it is scheduled on
-\item scheduledMinutes array, Minutes of the day it is scheduled on
-\item scheduledRunsPerHour integer, Alternative to scheduled minutes, number of times to run per hour
+\item scheduled boolean, If the item is scheduled.
+\item scheduledDays array, Day based on numeric value starting at 0 for Sunday.
+\item scheduledHours array, Hours of the day it is scheduled on.
+\item scheduledMinutes array, Minutes of the day it is scheduled on.
+\item scheduledRunsPerHour integer, Alternative to scheduled minutes, number of times to run per hour.
 }}
 \item{parentId}{integer, Parent ID that triggers this enhancement.}
-\item{notifications}{object, A list containing the following elements: 
+\item{notifications}{list, A list containing the following elements: 
 \itemize{
 \item urls array, URLs to receive a POST request at job completion
 \item successEmailSubject string, Custom subject line for success e-mail.
@@ -106,7 +106,7 @@ A list containing the following elements:
 \item successOn boolean, If success email notifications are on.
 \item failureOn boolean, If failure email notifications are on.
 }}
-\item{runningAs}{object, A list containing the following elements: 
+\item{runningAs}{list, A list containing the following elements: 
 \itemize{
 \item id integer, The ID of this user.
 \item name string, This user's name.
@@ -114,15 +114,15 @@ A list containing the following elements:
 \item initials string, This user's initials.
 \item online boolean, Whether this user is online.
 }}
-\item{source}{object, A list containing the following elements: 
+\item{source}{list, A list containing the following elements: 
 \itemize{
 \item databaseTable object, 
 }}
-\item{destination}{object, A list containing the following elements: 
+\item{destination}{list, A list containing the following elements: 
 \itemize{
 \item databaseTable object, 
 }}
-\item{columnMapping}{object, A list containing the following elements: 
+\item{columnMapping}{list, A list containing the following elements: 
 \itemize{
 \item address1 string, The first address line.
 \item address2 string, The second address line.
@@ -137,7 +137,7 @@ A list containing the following elements:
 \item{ncoaCredentialId}{integer, Credential to use when performing NCOA updates. Required if 'performNcoa' is true.}
 \item{outputLevel}{string, The set of fields persisted by a CASS or NCOA enhancement.For CASS enhancements, one of 'cass' or 'all.'For NCOA enhancements, one of 'cass', 'ncoa' , 'coalesced' or 'all'.By default, all fields will be returned.}
 \item{limitingSQL}{string, The limiting sql.}
-\item{archived}{string, The archival status of the requested object(s).}
+\item{archived}{string, The archival status of the requested item(s).}
 }
 \description{
 Create a CASS/NCOA Enhancement

@@ -15,30 +15,30 @@ imports_post(name, sync_type, is_outbound, source = NULL,
 
 \item{is_outbound}{boolean required.}
 
-\item{source}{object optional. A list containing the following elements: 
+\item{source}{list optional. A list containing the following elements: 
 \itemize{
 \item remoteHostId integer, 
 \item credentialId integer, 
 \item additionalCredentials array, Array that holds additional credentials used for specific imports. For salesforce imports, the first and only element is the client credential id.
 }}
 
-\item{destination}{object optional. A list containing the following elements: 
+\item{destination}{list optional. A list containing the following elements: 
 \itemize{
 \item remoteHostId integer, 
 \item credentialId integer, 
 \item additionalCredentials array, Array that holds additional credentials used for specific imports. For salesforce imports, the first and only element is the client credential id.
 }}
 
-\item{schedule}{object optional. A list containing the following elements: 
+\item{schedule}{list optional. A list containing the following elements: 
 \itemize{
-\item scheduled boolean, If the object is scheduled
-\item scheduledDays array, Day based on numeric value starting at 0 for Sunday
-\item scheduledHours array, Hours of the day it is scheduled on
-\item scheduledMinutes array, Minutes of the day it is scheduled on
-\item scheduledRunsPerHour integer, Alternative to scheduled minutes, number of times to run per hour
+\item scheduled boolean, If the item is scheduled.
+\item scheduledDays array, Day based on numeric value starting at 0 for Sunday.
+\item scheduledHours array, Hours of the day it is scheduled on.
+\item scheduledMinutes array, Minutes of the day it is scheduled on.
+\item scheduledRunsPerHour integer, Alternative to scheduled minutes, number of times to run per hour.
 }}
 
-\item{notifications}{object optional. A list containing the following elements: 
+\item{notifications}{list optional. A list containing the following elements: 
 \itemize{
 \item urls array, URLs to receive a POST request at job completion
 \item successEmailSubject string, Custom subject line for success e-mail.
@@ -58,35 +58,35 @@ imports_post(name, sync_type, is_outbound, source = NULL,
 
 \item{time_zone}{string optional. The time zone of this import.}
 
-\item{hidden}{boolean optional. The hidden status of the object.}
+\item{hidden}{boolean optional. The hidden status of the item.}
 }
 \value{
 A list containing the following elements:
 \item{name}{string, The name of the import.}
 \item{syncType}{string, The type of sync to perform; one of Dbsync, AutoImport, SilverpopDataImport, SilverpopContactImport, GdocImport, GdocExport, and Salesforce.}
-\item{source}{object, A list containing the following elements: 
+\item{source}{list, A list containing the following elements: 
 \itemize{
 \item remoteHostId integer, 
 \item credentialId integer, 
 \item additionalCredentials array, Array that holds additional credentials used for specific imports. For salesforce imports, the first and only element is the client credential id.
 \item name string, 
 }}
-\item{destination}{object, A list containing the following elements: 
+\item{destination}{list, A list containing the following elements: 
 \itemize{
 \item remoteHostId integer, 
 \item credentialId integer, 
 \item additionalCredentials array, Array that holds additional credentials used for specific imports. For salesforce imports, the first and only element is the client credential id.
 \item name string, 
 }}
-\item{schedule}{object, A list containing the following elements: 
+\item{schedule}{list, A list containing the following elements: 
 \itemize{
-\item scheduled boolean, If the object is scheduled
-\item scheduledDays array, Day based on numeric value starting at 0 for Sunday
-\item scheduledHours array, Hours of the day it is scheduled on
-\item scheduledMinutes array, Minutes of the day it is scheduled on
-\item scheduledRunsPerHour integer, Alternative to scheduled minutes, number of times to run per hour
+\item scheduled boolean, If the item is scheduled.
+\item scheduledDays array, Day based on numeric value starting at 0 for Sunday.
+\item scheduledHours array, Hours of the day it is scheduled on.
+\item scheduledMinutes array, Minutes of the day it is scheduled on.
+\item scheduledRunsPerHour integer, Alternative to scheduled minutes, number of times to run per hour.
 }}
-\item{notifications}{object, A list containing the following elements: 
+\item{notifications}{list, A list containing the following elements: 
 \itemize{
 \item urls array, URLs to receive a POST request at job completion
 \item successEmailSubject string, Custom subject line for success e-mail.
@@ -113,7 +113,7 @@ A list containing the following elements:
 \item{state}{string, }
 \item{createdAt}{string, }
 \item{updatedAt}{string, }
-\item{lastRun}{object, A list containing the following elements: 
+\item{lastRun}{list, A list containing the following elements: 
 \itemize{
 \item id integer, 
 \item state string, 
@@ -122,7 +122,7 @@ A list containing the following elements:
 \item finishedAt string, The time that the run completed.
 \item error string, The error message for this run, if present.
 }}
-\item{user}{object, A list containing the following elements: 
+\item{user}{list, A list containing the following elements: 
 \itemize{
 \item id integer, The ID of this user.
 \item name string, This user's name.
@@ -130,7 +130,7 @@ A list containing the following elements:
 \item initials string, This user's initials.
 \item online boolean, Whether this user is online.
 }}
-\item{runningAs}{object, A list containing the following elements: 
+\item{runningAs}{list, A list containing the following elements: 
 \itemize{
 \item id integer, The ID of this user.
 \item name string, This user's name.
@@ -140,8 +140,8 @@ A list containing the following elements:
 }}
 \item{nextRunAt}{string, The time of the next scheduled run.}
 \item{timeZone}{string, The time zone of this import.}
-\item{hidden}{boolean, The hidden status of the object.}
-\item{archived}{string, The archival status of the requested object(s).}
+\item{hidden}{boolean, The hidden status of the item.}
+\item{archived}{string, The archival status of the requested item(s).}
 }
 \description{
 Create a new import configuration

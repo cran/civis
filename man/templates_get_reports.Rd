@@ -18,7 +18,7 @@ A list containing the following elements:
 \item{updatedAt}{string, }
 \item{useCount}{integer, The number of uses of this template.}
 \item{archived}{boolean, Whether the template has been archived.}
-\item{author}{object, A list containing the following elements: 
+\item{author}{list, A list containing the following elements: 
 \itemize{
 \item id integer, The ID of this user.
 \item name string, This user's name.
@@ -29,7 +29,7 @@ A list containing the following elements:
 \item{techReviewed}{boolean, Whether this template has been audited by Civis for security vulnerability and correctness.}
 \item{authCodeUrl}{string, A URL to the template's stored code body.}
 \item{provideAPIKey}{boolean, Whether reports based on this template request an API Key from the report viewer.}
-\item{hidden}{boolean, The hidden status of the object.}
+\item{hidden}{boolean, The hidden status of the item.}
 }
 \description{
 Get a Report Template

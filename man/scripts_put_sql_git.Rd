@@ -8,7 +8,7 @@ scripts_put_sql_git(id, git_ref = NULL, git_branch = NULL,
   git_path = NULL, git_repo_url = NULL)
 }
 \arguments{
-\item{id}{integer required. The ID of the object.}
+\item{id}{integer required. The ID of the file.}
 
 \item{git_ref}{string optional. A git reference specifying an unambiguous version of the file. Can be a branch name, or the full or shortened SHA of a commit.}
 
@@ -23,7 +23,7 @@ A list containing the following elements:
 \item{gitRef}{string, A git reference specifying an unambiguous version of the file. Can be a branch name, or the full or shortened SHA of a commit.}
 \item{gitBranch}{string, The git branch that the file is on.}
 \item{gitPath}{string, The path of the file in the repository.}
-\item{gitRepo}{object, A list containing the following elements: 
+\item{gitRepo}{list, A list containing the following elements: 
 \itemize{
 \item id integer, The ID for this git repository.
 \item repoUrl string, The URL for this git repository.

@@ -18,7 +18,7 @@ A list containing the following elements:
 \item{appReleaseId}{integer, The id of the app release the instance belongs to.}
 \item{reportId}{integer, The id of the report the instance belongs to.}
 \item{createdAt}{string, The time the instance was created at.}
-\item{user}{object, A list containing the following elements: 
+\item{user}{list, A list containing the following elements: 
 \itemize{
 \item id integer, The ID of this user.
 \item name string, This user's name.
@@ -26,7 +26,7 @@ A list containing the following elements:
 \item initials string, This user's initials.
 \item online boolean, Whether this user is online.
 }}
-\item{projectId}{integer, The id of the project collecting all the objects that belong to this app instance.}
+\item{projectId}{integer, The id of the project collecting all the items that belong to this app instance.}
 \item{authCodeUrl}{string, }
 \item{apiKey}{string, A Civis API key that can be used by this app instance.}
 }

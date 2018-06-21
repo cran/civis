@@ -9,17 +9,17 @@ scripts_list(type = NULL, category = NULL, author = NULL, status = NULL,
   order = NULL, order_dir = NULL)
 }
 \arguments{
-\item{type}{string optional. If specified, return objects of these types. The valid types are sql, python3, javascript, r, and containers.}
+\item{type}{string optional. If specified, return items of these types. The valid types are sql, python3, javascript, r, and containers.}
 
 \item{category}{string optional. A job category for filtering scripts. Must be one of script, import, export, and enhancement.}
 
-\item{author}{string optional. If specified, return objects from this author. Must use user IDs. A comma separated list of IDs is also accepted to return objects from multiple authors.}
+\item{author}{string optional. If specified, return items from this author. Must use user IDs. A comma separated list of IDs is also accepted to return items from multiple authors.}
 
-\item{status}{string optional. If specified, returns objects with one of these statuses. It accepts a comma-separated list, possible values are 'running', 'failed', 'succeeded', 'idle', 'scheduled'.}
+\item{status}{string optional. If specified, returns items with one of these statuses. It accepts a comma-separated list, possible values are 'running', 'failed', 'succeeded', 'idle', 'scheduled'.}
 
-\item{hidden}{boolean optional. If specified to be true, returns hidden objects. Defaults to false, returning non-hidden objects.}
+\item{hidden}{boolean optional. If specified to be true, returns hidden items. Defaults to false, returning non-hidden items.}
 
-\item{archived}{string optional. The archival status of the requested object(s).}
+\item{archived}{string optional. The archival status of the requested item(s).}
 
 \item{limit}{integer optional. Number of results to return. Defaults to 20. Maximum allowed is 50.}
 
@@ -36,7 +36,7 @@ An array containing the following fields:
 \item{type}{string, The type of the script (e.g SQL, Container, Python, R, JavaScript)}
 \item{createdAt}{string, The time this script was created.}
 \item{updatedAt}{string, The time the script was last updated.}
-\item{author}{object, A list containing the following elements: 
+\item{author}{list, A list containing the following elements: 
 \itemize{
 \item id integer, The ID of this user.
 \item name string, This user's name.
@@ -54,13 +54,13 @@ An array containing the following fields:
 \item{parentId}{integer, The ID of the parent job that will trigger this script}
 \item{isTemplate}{boolean, Whether others scripts use this one as a template.}
 \item{fromTemplateId}{integer, The ID of the template this script uses, if any.}
-\item{links}{object, A list containing the following elements: 
+\item{links}{list, A list containing the following elements: 
 \itemize{
 \item details string, The details link to get more information about the script.
 \item runs string, The runs link to get the run information list for this script.
 }}
 \item{timeZone}{string, The time zone of this script.}
-\item{lastRun}{object, A list containing the following elements: 
+\item{lastRun}{list, A list containing the following elements: 
 \itemize{
 \item id integer, 
 \item state string, 
@@ -69,7 +69,7 @@ An array containing the following fields:
 \item finishedAt string, The time that the run completed.
 \item error string, The error message for this run, if present.
 }}
-\item{archived}{string, The archival status of the requested object(s).}
+\item{archived}{string, The archival status of the requested item(s).}
 \item{templateScriptId}{integer, The ID of the template script, if any.}
 }
 \description{

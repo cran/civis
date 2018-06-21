@@ -10,7 +10,7 @@ apps_list_releases(slug, archived = NULL, limit = NULL, page_num = NULL,
 \arguments{
 \item{slug}{string required. The slug for the application.}
 
-\item{archived}{string optional. The archival status of the requested object(s).}
+\item{archived}{string optional. The archival status of the requested item(s).}
 
 \item{limit}{integer optional. Number of results to return. Defaults to its maximum of 50.}
 
@@ -25,7 +25,7 @@ An array containing the following fields:
 \item{id}{integer, The unique id of the release.}
 \item{appId}{integer, The id of the app the release belongs to.}
 \item{reportTemplateId}{integer, ID of the report template for this release.}
-\item{resources}{object, A hash of resources associated with this release.}
+\item{resources}{list, A hash of resources associated with this release.}
 }
 \description{
 List the releases of a particular Decision Application

@@ -22,10 +22,10 @@ services_patch(id, name = NULL, description = NULL,
 
 \item{docker_image_tag}{string optional. The tag of the docker image to pull from DockerHub (default: latest).}
 
-\item{schedule}{object optional. A list containing the following elements: 
+\item{schedule}{list optional. A list containing the following elements: 
 \itemize{
 \item runtimePlan string, Only affects the service when deployed. On Demand means that the service will be turned on when viewed and automatically turned off after periods of inactivity.  Specific Times means the service will be on when scheduled. Always On means the deployed service will always be on.
-\item recurrences array, List of day-hour combinations this object is scheduled for
+\item recurrences array, List of day-hour combinations this item is scheduled for
 }}
 
 \item{replicas}{integer optional. The number of Service replicas to deploy. When maxReplicas is set, this field defines the minimum number of replicas to deploy.}
@@ -46,11 +46,11 @@ services_patch(id, name = NULL, description = NULL,
 
 \item{git_repo_ref}{string optional. The git reference to use when pulling code from the repo.}
 
-\item{git_path_dir}{string optional. The path to the Shiny app code within the git repo. If unspecified, the root directory will be used.}
+\item{git_path_dir}{string optional. The path to the Service code within the git repo. If unspecified, the root directory will be used.}
 
-\item{environment_variables}{object optional. Environment Variables to be passed into the Service.}
+\item{environment_variables}{list optional. Environment Variables to be passed into the Service.}
 
-\item{notifications}{object optional. A list containing the following elements: 
+\item{notifications}{list optional. A list containing the following elements: 
 \itemize{
 \item failureEmailAddresses array, Addresses to notify by e-mail when the service fails.
 \item failureOn boolean, If failure email notifications are on
@@ -61,7 +61,7 @@ A list containing the following elements:
 \item{id}{integer, The ID for this Service.}
 \item{name}{string, The name of this Service.}
 \item{description}{string, The description of this Service.}
-\item{user}{object, A list containing the following elements: 
+\item{user}{list, A list containing the following elements: 
 \itemize{
 \item id integer, The ID of this user.
 \item name string, This user's name.
@@ -71,10 +71,10 @@ A list containing the following elements:
 }}
 \item{dockerImageName}{string, The name of the docker image to pull from DockerHub.}
 \item{dockerImageTag}{string, The tag of the docker image to pull from DockerHub (default: latest).}
-\item{schedule}{object, A list containing the following elements: 
+\item{schedule}{list, A list containing the following elements: 
 \itemize{
 \item runtimePlan string, Only affects the service when deployed. On Demand means that the service will be turned on when viewed and automatically turned off after periods of inactivity.  Specific Times means the service will be on when scheduled. Always On means the deployed service will always be on.
-\item recurrences array, List of day-hour combinations this object is scheduled for
+\item recurrences array, List of day-hour combinations this item is scheduled for
 }}
 \item{timeZone}{string, }
 \item{replicas}{integer, The number of Service replicas to deploy. When maxReplicas is set, this field defines the minimum number of replicas to deploy.}
@@ -88,9 +88,9 @@ A list containing the following elements:
 \item{apiKeyId}{integer, API key id of user}
 \item{gitRepoUrl}{string, The url for the git repo where the Service code lives.}
 \item{gitRepoRef}{string, The git reference to use when pulling code from the repo.}
-\item{gitPathDir}{string, The path to the Shiny app code within the git repo. If unspecified, the root directory will be used.}
+\item{gitPathDir}{string, The path to the Service code within the git repo. If unspecified, the root directory will be used.}
 \item{reportId}{integer, The ID of the associated report.}
-\item{currentDeployment}{object, A list containing the following elements: 
+\item{currentDeployment}{list, A list containing the following elements: 
 \itemize{
 \item deploymentId integer, The ID for this deployment.
 \item userId integer, The ID of the owner.
@@ -98,7 +98,7 @@ A list containing the following elements:
 \item name string, Name of the deployment.
 \item dockerImageName string, The name of the docker image to pull from DockerHub.
 \item dockerImageTag string, The tag of the docker image to pull from DockerHub (default: latest).
-\item displayUrl string, URL that displays the deployed platform object and includes auth token.
+\item displayUrl string, A signed URL for viewing the deployed item.
 \item instanceType string, The EC2 instance type requested for the deployment.
 \item memory integer, The memory allocated to the deployment.
 \item cpu integer, The cpu allocated to the deployment.
@@ -109,7 +109,7 @@ A list containing the following elements:
 \item published boolean, 
 \item serviceId integer, The ID of owning Service
 }}
-\item{previewDeployment}{object, A list containing the following elements: 
+\item{previewDeployment}{list, A list containing the following elements: 
 \itemize{
 \item deploymentId integer, The ID for this deployment.
 \item userId integer, The ID of the owner.
@@ -117,7 +117,7 @@ A list containing the following elements:
 \item name string, Name of the deployment.
 \item dockerImageName string, The name of the docker image to pull from DockerHub.
 \item dockerImageTag string, The tag of the docker image to pull from DockerHub (default: latest).
-\item displayUrl string, URL that displays the deployed platform object and includes auth token.
+\item displayUrl string, A signed URL for viewing the deployed item.
 \item instanceType string, The EC2 instance type requested for the deployment.
 \item memory integer, The memory allocated to the deployment.
 \item cpu integer, The cpu allocated to the deployment.
@@ -130,14 +130,14 @@ A list containing the following elements:
 }}
 \item{currentUrl}{string, The URL that the service is hosted at.}
 \item{previewUrl}{string, The URL that previews of the service are hosted at.}
-\item{environmentVariables}{object, Environment Variables to be passed into the Service.}
-\item{notifications}{object, A list containing the following elements: 
+\item{environmentVariables}{list, Environment Variables to be passed into the Service.}
+\item{notifications}{list, A list containing the following elements: 
 \itemize{
 \item failureEmailAddresses array, Addresses to notify by e-mail when the service fails.
 \item failureOn boolean, If failure email notifications are on
 }}
-\item{archived}{string, The archival status of the requested object(s).}
-\item{hidden}{boolean, The hidden status of the object.}
+\item{archived}{string, The archival status of the requested item(s).}
+\item{hidden}{boolean, The hidden status of the item.}
 }
 \description{
 Update some attributes of this Service

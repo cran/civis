@@ -8,7 +8,7 @@ media_list_optimizations(archived = NULL, limit = NULL, page_num = NULL,
   order = NULL, order_dir = NULL)
 }
 \arguments{
-\item{archived}{string optional. The archival status of the requested object(s).}
+\item{archived}{string optional. The archival status of the requested item(s).}
 
 \item{limit}{integer optional. Number of results to return. Defaults to 20. Maximum allowed is 50.}
 
@@ -21,7 +21,7 @@ media_list_optimizations(archived = NULL, limit = NULL, page_num = NULL,
 \value{
 An array containing the following fields:
 \item{id}{integer, The optimization ID.}
-\item{author}{object, A list containing the following elements: 
+\item{author}{list, A list containing the following elements: 
 \itemize{
 \item id integer, The ID of this user.
 \item name string, This user's name.
@@ -36,7 +36,7 @@ An array containing the following fields:
 \item{state}{string, The state of the last run.}
 \item{lastRunId}{integer, The ID of the last run.}
 \item{spotOrderId}{integer, The ID for the spot order produced by the optimization.}
-\item{archived}{string, The archival status of the requested object(s).}
+\item{archived}{string, The archival status of the requested item(s).}
 }
 \description{
 List all optimizations

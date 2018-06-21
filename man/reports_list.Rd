@@ -15,9 +15,9 @@ reports_list(type = NULL, author = NULL, template_id = NULL,
 
 \item{template_id}{integer optional. If specified, return reports using the provided Template.}
 
-\item{hidden}{boolean optional. If specified to be true, returns hidden objects. Defaults to false, returning non-hidden objects.}
+\item{hidden}{boolean optional. If specified to be true, returns hidden items. Defaults to false, returning non-hidden items.}
 
-\item{archived}{string optional. The archival status of the requested object(s).}
+\item{archived}{string optional. The archival status of the requested item(s).}
 
 \item{limit}{integer optional. Number of results to return. Defaults to 20. Maximum allowed is 50.}
 
@@ -31,7 +31,7 @@ reports_list(type = NULL, author = NULL, template_id = NULL,
 An array containing the following fields:
 \item{id}{integer, The ID of this report.}
 \item{name}{string, The name of the report.}
-\item{user}{object, A list containing the following elements: 
+\item{user}{list, A list containing the following elements: 
 \itemize{
 \item id integer, The ID of this user.
 \item name string, This user's name.
@@ -49,7 +49,7 @@ An array containing the following fields:
 \item{state}{string, The status of the report's last run.}
 \item{finishedAt}{string, The time that the report's last run finished.}
 \item{vizUpdatedAt}{string, The time that the report's visualization was last updated.}
-\item{script}{object, A list containing the following elements: 
+\item{script}{list, A list containing the following elements: 
 \itemize{
 \item id integer, The ID for the script.
 \item name string, The name of the script.
@@ -60,7 +60,7 @@ An array containing the following fields:
 \item{type}{string, }
 \item{templateId}{integer, The ID of the template used for this report.}
 \item{authThumbnailUrl}{string, URL for a thumbnail of the report.}
-\item{lastRun}{object, A list containing the following elements: 
+\item{lastRun}{list, A list containing the following elements: 
 \itemize{
 \item id integer, 
 \item state string, 
@@ -69,7 +69,7 @@ An array containing the following fields:
 \item finishedAt string, The time that the run completed.
 \item error string, The error message for this run, if present.
 }}
-\item{archived}{string, The archival status of the requested object(s).}
+\item{archived}{string, The archival status of the requested item(s).}
 }
 \description{
 List
