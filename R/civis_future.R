@@ -1,4 +1,4 @@
-#' @importFrom future run value resolved
+#' @importFrom future run resolved result
 NULL
 
 #' Evaluate an expression in Civis Platform
@@ -69,7 +69,7 @@ CivisFuture <- function(expr = NULL,
                         label = NULL,
                         required_resources = list(cpu = 1024, memory = 2048, diskSpace = 4),
                         docker_image_name = "civisanalytics/datascience-r",
-                        docker_image_tag = "2.3.0",
+                        docker_image_tag = "2",
                          ...) {
 
   gp <- future::getGlobalsAndPackages(expr, envir = envir, globals = globals)
@@ -91,11 +91,13 @@ CivisFuture <- function(expr = NULL,
                            gc = gc,
                            earlySignal = earlySignal,
                            label = label,
+                           version = "1.8",  # see: https://github.com/civisanalytics/civis-r/issues/168
 
                            # extra args to scripts_post_containers
                            required_resources = required_resources,
                            docker_image_name = docker_image_name,
                            docker_image_tag = docker_image_tag, ...)
+  future$.callResult <- TRUE
   structure(future, class = c("CivisFuture", class(future)))
 }
 
@@ -121,17 +123,20 @@ run.CivisFuture <- function(future, ...) {
 
 #' @export
 #' @describeIn CivisFuture Return the value of a CivisFuture
-value.CivisFuture <- function(future, ...) {
+result.CivisFuture <- function(future, ...) {
   if (future$state == "created") {
     future <- run(future)
   }
-  # if the value isn't collected, try to collect it.
-  if (is.null(future$value)) {
+
+  # if the result isn't collected, try to collect it.
+  if (is.null(future$result)) {
     tryCatch({
       future$run <- await(scripts_get_containers_runs, id = future$job$containerId,
                           run_id = future$job$id)
       future$state <- future$run$state
-      future$value <- fetch_output(future$run)
+      value <- read_civis(civis_script(future$job$containerId),
+                          using = readRDS)[[1]]
+      future$result <- future::FutureResult(value=value)
       future$logs  <- fetch_logs(future$run)
     }, civis_error = function(e) {
       future$state <- "failed"
@@ -139,7 +144,7 @@ value.CivisFuture <- function(future, ...) {
       stop(e)
     }, error = function(e) stop(e))
   }
-  future$value
+  future$result
 }
 
 #' Cancel the evaluation of a CivisFuture.
@@ -174,18 +179,11 @@ fetch_logs.CivisFuture <- function(object, ...){
   object$logs
 }
 
-fetch_output <- function(run) {
-  outputs <- scripts_list_containers_runs_outputs(run$containerId, run$id)
-  # We only save one object in the run script.
-  output_file_id <- outputs[[1]][["objectId"]]
-  read_civis(output_file_id)
-}
-
 make_docker_cmd <- function(task_file_id, run_script_file_id) {
   # this loads the same initial packages in the same order as default R.
-  cmd <- "Rscript -e \"civis::download_civis(${run_script_file_id}, 'run.R')\" && \
-    Rscript --default-packages=methods,datasets,utils,grDevices,graphics,stats run.R ${task_file_id}"
-  stringr::str_interp(cmd)
+  sprintf("Rscript -e \"civis::download_civis(%i, 'run.R')\" && \
+    Rscript --default-packages=methods,datasets,utils,grDevices,graphics,stats run.R %i",
+          run_script_file_id, task_file_id)
 }
 
 upload_runner_script <- function() {

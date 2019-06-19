@@ -38,6 +38,9 @@
 #'    r <- try(await(queries_get, id = q_id))
 #'    get_error(r)
 #'
+#'    jobs <- c(1234, 5678)
+#'    runs <- c(1234, 5678)
+#'    rs <- await_all(scripts_get_r_runs, .x = jobs, .y = runs)
 #' }
 #' @export
 #' @details
@@ -109,14 +112,17 @@ await <- function(f, ...,
 }
 
 #' @param .x a vector of values to be passed to \code{f}
+#' @param .y a vector of values to be passed to \code{f} (default \code{NULL})
 #' @export
 #' @describeIn await Call a function repeatedly for all values of a vector until all have reached a completed status
-await_all <- function(f, .x, ...,
+#' @importFrom methods is
+await_all <- function(f, .x, .y = NULL, ...,
                       .status_key = "state",
                       .success_states = c("succeeded", "success"),
                       .error_states = c("failed", "cancelled"),
                       .timeout = NULL, .interval = NULL,
                       .verbose = FALSE) {
+
 
   responses <- vector(mode = "list", length = length(.x))
   called <- rep(FALSE, length(.x))
@@ -124,15 +130,49 @@ await_all <- function(f, .x, ...,
   start <- Sys.time()
   fname <- as.character(substitute(f))
 
+  if (!is.null(.y) & (length(.x) != length(.y))) {
+    error <- c("Lengths of input parameters (.x and .y) are not equal!")
+    stop(error)
+  }
+
+  if (is.null(.y)) {
+    params <- lapply(.x, function(x) {
+      args <- list(
+        x,
+        .status_key = .status_key,
+        .success_states = .success_states,
+        .error_states = .error_states,
+        fname = fname
+      )
+      names(args)[1] <- names(formals(f))[1]
+      args
+    })
+  } else {
+    params <-
+      mapply(function(...) {
+        args <- append(
+          list(...),
+          list(
+            .status_key = .status_key,
+            .success_states = .success_states,
+            .error_states = .error_states,
+            fname = fname
+          )
+        )
+        # do.call needs named args
+      names(args)[1:2] <- names(formals(f))[1:2]
+      args
+    }, .x, .y, SIMPLIFY = FALSE)
+  }
+
   repeat {
-    responses[!called] <- lapply(.x[!called], safe_call_once,
-                                 f = f, ..., .status_key = .status_key,
-                                 .success_states = .success_states,
-                                 .error_states = .error_states,
-                                 fname = fname)
+    responses[!called] <- lapply(params[!called], function(args, ...) {
+      do.call(safe_call_once, c(f, args, ...))
+    }, ...)
 
-
-    called <- unlist(lapply(responses, function(x) x$called))
+    called <- unlist(lapply(responses, function(x) {
+      x$called | is(x, 'error')
+    }))
 
     if (all(called)) {
       return(lapply(responses, maybe_response))
@@ -141,8 +181,6 @@ await_all <- function(f, .x, ...,
     if (!is.null(.timeout)) {
       running_time <- as.numeric(difftime(Sys.time(), start, units = "secs"))
       if (running_time > .timeout) {
-        args <- c(list(.x), list(...))
-        names(args)[1] <- names(formals(f))[1]
         status <- unlist(lapply(responses, function(x) get_status(x$response)))
         stop(civis_timeout_error(fname, args, status))
       }
@@ -158,7 +196,7 @@ await_all <- function(f, .x, ...,
                       ". Retry ", i, " in ", pretty_time, " seconds")
         message(msg)
       }
-      lapply(seq_along(.x), make_msg)
+      lapply(seq_along(params), make_msg)
     }
     Sys.sleep(interval)
     i <- i + 1
@@ -170,18 +208,17 @@ safe_call_once <- function(...) {
   tryCatch(call_once(...), error = function(e) e)
 }
 
-# .id is the first argument to f.
-call_once <- function(f, ..., .id = NULL, .status_key = "state",
+call_once <- function(f, ..., .status_key = "state",
                       .success_states = c("succeeded"),
                       .error_states = c("failed", "cancelled"), fname) {
-  response <- do.call(f, c(.id, list(...)))
+  response <- do.call(f, list(...))
   status <- response[[.status_key]]
   if (is.null(status)) stop("Cannot find status")
 
   called <- any(status %in% .success_states)
 
   if (any(status %in% .error_states)) {
-    args <- c(.id, list(...))
+    args <- list(...)
     names(args)[1] <- names(formals(f))[1]
     # queries_post uses response$exception for errors
     error <- response$error %||% response$exception
@@ -280,8 +317,3 @@ await_err_msg <- function(fname, args = NULL, error = NULL) {
   arg_str  <- if (!is.null(args)) paste0(names(args), " = ", args, collapse = ", ")
   paste0(fname, "(", arg_str, "): ", error)
 }
-
-
-
-
-

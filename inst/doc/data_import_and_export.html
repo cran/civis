@@ -291,6 +291,9 @@ code > span.al { color: #ff0000; font-weight: bold; }
 code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
+
+
+
 </head>
 
 <body>
@@ -299,8 +302,8 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 
 <h1 class="title toc-ignore">Data Import and Export</h1>
-<h4 class="author"><em>Patrick Miller, Keith Ingersoll</em></h4>
-<h4 class="date"><em>2017-08-14</em></h4>
+<h4 class="author">Patrick Miller, Keith Ingersoll</h4>
+<h4 class="date">2017-08-14</h4>
 
 
 
@@ -318,11 +321,11 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <li>Amazon S3, also referred to as the ‘files’ endpoint.</li>
 </ol>
 <p>Tables in Redshift are accessed and modified using SQL queries. Tables in Redshift can be easily shared and used in multiple workflows by multiple people. However, importing and exporting even small files on Redshift can be slow.</p>
-<p>R objects and arbitrary files can be stored on Amazon S3, and are accessed using a numeric file id. In <code>civis</code>, R objects are serialized using <code>saveRDS</code> for speed and efficiency. Text or csv files created by other programs can also be read back into R as a data frames.</p>
+<p>R objects and arbitrary files can be stored on Amazon S3, and are accessed using a numeric file id. Data frames are uploaded as CSVs for portability, and arbitrary R objects are serialized using <code>saveRDS</code> for speed and efficiency.</p>
 </div>
 <div id="reading-data-into-r-from-platform" class="section level2">
 <h2>Reading Data Into R From Platform</h2>
-<p>The main workhose for getting data from Platform is <code>read_civis</code>. This function is designed to work similarly to the built in function <code>read.csv</code>, returning a dataframe from a table in Platform. For more flexibility, <code>read_civis</code> can download files from Redshift using an SQL query, or download a file from S3 (’the files endpoint’) using a file id.</p>
+<p>The main workhorse for getting data from Platform is <code>read_civis</code>. This function is designed to work similarly to the built in function <code>read.csv</code>, returning a dataframe from a table in Platform. For more flexibility, <code>read_civis</code> can download files from Redshift using an SQL query, or download a file from S3 (’the files endpoint’) using a file id.</p>
 <p>To read from a table in Platform, simply provide the name of the schema, table within the schema, and the database:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">df &lt;-<span class="st"> </span><span class="kw">read_civis</span>(<span class="st">&quot;schema.tablename&quot;</span>, <span class="dt">database =</span> <span class="st">&quot;my-database&quot;</span>)</a></code></pre></div>
 <p>For convenience, a default database can be set in the package options, and not specified in further calls to any IO function. If there is only one database available, this database will automatically be used as the default. In the examples that follow, we assume that a default database has been set.</p>
@@ -340,8 +343,8 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb5-2" title="2">df &lt;-<span class="st"> </span><span class="kw">read_civis</span>(<span class="kw">sql</span>(query), <span class="dt">colClasses =</span> <span class="st">&quot;character&quot;</span>)</a>
 <a class="sourceLine" id="cb5-3" title="3">df2 &lt;-<span class="st"> </span><span class="kw">read_civis</span>(<span class="kw">sql</span>(query), <span class="dt">as.is =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 </div>
-<div id="uploading-data-to-platform" class="section level2">
-<h2>Uploading Data to Platform</h2>
+<div id="uploading-data-to-a-database" class="section level2">
+<h2>Uploading Data to a Database</h2>
 <p>The complement to reading data into the R workspace is writing data to the Platform. The function <code>write_civis</code> uploads data frames or csv files to an Amazon Redshift database. The function <code>write_civis_file</code> uploads R objects and arbitrary files to Amazon S3 (the files endpoint).</p>
 <p>When creating a new table, <code>write_civis</code> relies on Platform to determine data types. Distkeys and sortkeys can optionally be set to improve query performance. Again, we set a default database in these examples for convenience.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">options</span>(<span class="dt">civis.default_db =</span> <span class="st">&quot;my_database&quot;</span>)</a>
@@ -353,13 +356,23 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb7-2" title="2"><span class="kw">write_civis</span>(df, <span class="dt">tablename =</span> <span class="st">&quot;schema.tablename&quot;</span>, <span class="dt">if_exists =</span> <span class="st">&quot;truncate&quot;</span>)</a></code></pre></div>
 <p>If a csv file is saved to disk but not loaded in the R workspace, <code>write_civis</code> will upload the csv to Platform without needing first load the csv into RAM. This can save time when a file is large. Uploading a csv directly to Platform is done by simply passing the file name and path to <code>write_civis</code> as the first argument:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">write_civis</span>(<span class="st">&quot;~/path/to/my_data.csv&quot;</span>, <span class="dt">tablename=</span><span class="st">&quot;schema.tablename&quot;</span>)</a></code></pre></div>
-<p>Finally, <code>write_civis_file</code> uploads R objects and files to Amazon S3, which is also referred to as the ‘files endpoint.’ R objects saved to the files endpoint expire after 30 days and are serialized using <code>saveRDS</code>. R objects can be loaded back into memory by passing the file id to <code>read_civis</code>.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">data</span>(iris)</a>
-<a class="sourceLine" id="cb9-2" title="2">id &lt;-<span class="st"> </span><span class="kw">write_civis_file</span>(iris)</a>
-<a class="sourceLine" id="cb9-3" title="3">iris2 &lt;-<span class="st"> </span><span class="kw">read_civis</span>(id)</a></code></pre></div>
-<p>When passed a file name and path, <code>write_civis_file</code> will upload the file to S3 as-is. To read the file back into memory as a data frame, an appropriate function to convert the file to a data frame must be provided to the <code>using</code> argument of <code>read_civis</code>. For example, a csv on the files endpoint can be read back into R as a data frame by setting <code>using = read.csv</code>.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">id &lt;-<span class="st"> </span><span class="kw">write_civis_file</span>(<span class="st">&quot;path/to/my_data.csv&quot;</span>)</a>
-<a class="sourceLine" id="cb10-2" title="2"><span class="kw">read_civis</span>(id, <span class="dt">using =</span> read.csv)</a></code></pre></div>
+</div>
+<div id="uploading-data-to-s3" class="section level2">
+<h2>Uploading Data to S3</h2>
+<p>Finally, <code>write_civis_file</code> uploads data frames, R objects and files to Amazon S3, which is also referred to as the ‘files endpoint.’ Data frames are uploaded as CSVs. R objects saved to the files endpoint and are serialized using <code>saveRDS</code>.</p>
+<p>Data frames and R objects can be loaded back into memory by passing the file id to <code>read_civis</code>, and an appropriate <code>using</code> argument.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="co"># Upload a data frame</span></a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="kw">data</span>(iris)</a>
+<a class="sourceLine" id="cb9-3" title="3">id &lt;-<span class="st"> </span><span class="kw">write_civis_file</span>(iris)</a>
+<a class="sourceLine" id="cb9-4" title="4">iris2 &lt;-<span class="st"> </span><span class="kw">read_civis</span>(id)</a>
+<a class="sourceLine" id="cb9-5" title="5"></a>
+<a class="sourceLine" id="cb9-6" title="6"><span class="co"># Upload an arbitrary R object</span></a>
+<a class="sourceLine" id="cb9-7" title="7">farm &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">chickens =</span> <span class="dv">1</span>, <span class="dt">ducks =</span> <span class="dv">4</span>, <span class="dt">pigs =</span> <span class="dv">2</span>, <span class="dt">cows =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb9-8" title="8">id &lt;-<span class="st"> </span><span class="kw">write_civis_file</span>(farm)</a>
+<a class="sourceLine" id="cb9-9" title="9">farm2 &lt;-<span class="st"> </span><span class="kw">read_civis</span>(id, <span class="dt">using =</span> readRDS)</a></code></pre></div>
+<p>When passed a file name and path, <code>write_civis_file</code> will upload the file to S3 as-is. To read the file back into memory, an appropriate function to convert the file to a data frame must be provided to the <code>using</code> argument of <code>read_civis</code>. For example, a JSON file can be read back into R using <code>jsonlite::fromJSON</code>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">id &lt;-<span class="st"> </span><span class="kw">write_civis_file</span>(<span class="st">&quot;path/to/my_data.json&quot;</span>)</a>
+<a class="sourceLine" id="cb10-2" title="2"><span class="kw">read_civis</span>(id, <span class="dt">using =</span> jsonlite<span class="op">::</span>fromJSON)</a></code></pre></div>
 </div>
 <div id="downloading-large-data-sets-from-platform." class="section level2">
 <h2>Downloading Large Data Sets from Platform.</h2>

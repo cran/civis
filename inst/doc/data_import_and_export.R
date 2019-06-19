@@ -33,13 +33,20 @@
 #  write_civis("~/path/to/my_data.csv", tablename="schema.tablename")
 
 ## ---- eval = FALSE-------------------------------------------------------
+#  # Upload a data frame
 #  data(iris)
 #  id <- write_civis_file(iris)
 #  iris2 <- read_civis(id)
+#  
+#  # Upload an arbitrary R object
+#  farm <- list(chickens = 1, ducks = 4, pigs = 2, cows = 1)
+#  id <- write_civis_file(farm)
+#  farm2 <- read_civis(id, using = readRDS)
+#  
 
 ## ---- eval = FALSE-------------------------------------------------------
-#  id <- write_civis_file("path/to/my_data.csv")
-#  read_civis(id, using = read.csv)
+#  id <- write_civis_file("path/to/my_data.json")
+#  read_civis(id, using = jsonlite::fromJSON)
 
 ## ----eval=FALSE----------------------------------------------------------
 #  query <- "SELECT * FROM table JOIN other_table USING id WHERE var1 < 23"

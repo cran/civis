@@ -23,7 +23,7 @@ test_that("read_civis.sql reads csvs", {
     `civis::download_script_results` = mock_download_script_results,
     `civis::stop_for_status` = function(...) return(TRUE),
     expect_equal(mock_df, read_civis(x = "lazy", database = "jellyfish")),
-    expect_equal(mock_df, read_civis(dbplyr::sql("SELECT * FROM lazy"),
+    expect_equal(mock_df, read_civis(sql("SELECT * FROM lazy"),
                                      database = "jellyfish"))
   )
 })
@@ -35,7 +35,7 @@ test_that("read_civis.sql produces catchable error when query returns no rows", 
   with_mock(
     `civis::start_scripted_sql_job` = mock_sql_job,
     `civis::scripts_get_sql_runs` = function(...) no_results_resp,
-    try_err <- try(read_civis(dbplyr::sql("SELECT 0"), database = "arrgh"), silent = TRUE),
+    try_err <- try(read_civis(sql("SELECT 0"), database = "arrgh"), silent = TRUE),
     expect_true("empty_result_error" %in% class(attr(try_err, "condition")))
   )
 })
@@ -58,6 +58,37 @@ test_that("read_civis.numeric fails for NA", {
   msg <- "File ID cannot be NA."
   expect_error(read_civis(as.numeric(NA)), msg)
 })
+
+test_that("read_civis.civis_script using = NULL", {
+  mock_output <- list(list(name = 'asdf', objectId = 1, objectType = 'JSONValue', value = 'a'),
+                      list(name = 'fake', objectId = 2, objectType = 'JSONValue', value = 'b'),
+                      list(name = 'file_fake', objectId = 3, objectType = 'File'))
+  vals <- with_mock(
+    `civis::jobs_get` = function(...) list(type = 'JobTypes::ContainerDocker'),
+    `civis::scripts_list_containers_runs_outputs` = function(...) mock_output,
+    expect_equal(read_civis(civis_script(1,1), using = NULL),
+                 list(asdf = 'a', fake = 'b')),
+    expect_equal(read_civis(civis_script(1,1), using = NULL, regex = 'fake'),
+                 list(fake = 'b'))
+  )
+})
+
+test_that("read_civis.civis_script with using", {
+  mock_output <- list(list(name = 'asdf', objectId = 1, objectType = 'JSONValue', value = 'a'),
+                      list(name = 'lol', objectId = 2, objectType = 'File'),
+                      list(name = 'fake', objectId = 3, objectType = 'File'))
+  with_mock(
+    `civis::jobs_get` = function(...) list(type = 'JobTypes::ContainerDocker'),
+    `civis::scripts_list_containers_runs_outputs` = function(...) mock_output,
+    # returns first arg of read_civis.numeric, which is the objectId
+    `civis::read_civis.numeric` = function(...) list(...)[[1]],
+    expect_equal(read_civis(civis_script(1,1), using = I),
+                 list(lol = 2, fake = 3)),
+    expect_equal(read_civis(civis_script(1,1), regex = 'fake', using = I),
+                 list(fake = 3))
+  )
+})
+
 
 # write_civis -----------------------------------------------------------------
 
@@ -229,7 +260,7 @@ test_that("write_civis_file.character returns a file id", {
   unlink("mockfile.txt")
 })
 
-test_that("write_civis_file.default returns a file id", {
+test_that("write_civis_file returns a file id", {
   mock_df <- data.frame(a = c(1,2), b = c("cape-cod", "clams"))
   with_mock(
     `civis::files_post` = function(...) list(uploadFields = list("fakeurl.com"), id = 5),
@@ -251,6 +282,19 @@ test_that("write_civis_file calls multipart_unload for big files", {
     expect_equal(write_civis_file(fn, name = "asdf"), 1)
   )
   unlink(fn)
+})
+
+test_that("write_civis_file.data.frame uploads a csv", {
+  m <- mock()
+  with_mock(
+    `civis::with_tempfile` = m,
+    `civis:::write_civis_file.character` = function(...) 1,
+    write_civis_file(iris),
+    # call the temporary function given to with_tempfile
+    mock_args(m)[[1]][[1]]('tmp.csv'),
+    expect_equal(read.csv('tmp.csv'), iris),
+    unlink('tmp.csv')
+  )
 })
 
 # download_civis --------------------------------------------------------------

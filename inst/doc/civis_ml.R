@@ -83,7 +83,7 @@
 
 ## ---- eval=TRUE, echo=FALSE----------------------------------------------
 library(civis)
-path <- devtools::package_file("inst", "civis_ml_brandable.rds")
+path <- system.file("civis_ml_brandable.rds", package = 'civis')
 m <- readRDS(path)
 m
 
@@ -97,7 +97,7 @@ get_metric(m, "roc_auc")
 #  head(oos)
 
 ## ---- echo=FALSE, eval=TRUE----------------------------------------------
-path <- devtools::package_file("inst", "civis_ml_oos.rds")
+path <- system.file("civis_ml_oos.rds", package = 'civis')
 oos <- readRDS(path)
 head(oos)
 
@@ -139,7 +139,7 @@ hist(m)
 #           cross_validation_parameters = cv_params)
 
 ## ---- echo=FALSE, eval=TRUE----------------------------------------------
-path <- devtools::package_file("inst", "civis_ml_err.rds")
+path <- system.file("civis_ml_err.rds", package = 'civis')
 err <- readRDS(path)
 err
 
