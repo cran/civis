@@ -5,7 +5,7 @@ library(civis)
 args <- commandArgs(trailingOnly = TRUE)
 task_file_id <- as.numeric(args[[1]])
 
-fut <- read_civis(task_file_id)
+fut <- read_civis(task_file_id, using = readRDS)
 
 # install and load missing packages
 cat("Installing and loading required packages", fill = TRUE)
@@ -21,18 +21,13 @@ if (length(pkgs) > 0) {
 
 cat("Evaluating R expression", fill = TRUE)
 
-res <- eval(fut$expr, fut$envir)
+attach(fut$envir)
+
+res <- eval(fut$expr)
+
+detach(fut$envir)
 
 cat("Complete.", fill = TRUE)
 
-
-# store results on s3
-output_file_id <- write_civis_file(res)
-cat("Output file id: ", output_file_id, fill = TRUE)
-
-# attach to the job output
-script_id <- Sys.getenv("CIVIS_JOB_ID")
-run_id <- Sys.getenv("CIVIS_RUN_ID")
-resp <- scripts_post_containers_runs_outputs(script_id, run_id,
-                                              object_type = "File",
-                                              object_id = output_file_id)
+saveRDS(res, file = 'r-object.rds')
+write_job_output("r-object.rds")
