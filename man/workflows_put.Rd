@@ -4,8 +4,15 @@
 \alias{workflows_put}
 \title{Replace all attributes of this Workflow}
 \usage{
-workflows_put(id, name, description = NULL, definition = NULL,
-  schedule = NULL, time_zone = NULL, notifications = NULL)
+workflows_put(
+  id,
+  name,
+  description = NULL,
+  definition = NULL,
+  schedule = NULL,
+  time_zone = NULL,
+  notifications = NULL
+)
 }
 \arguments{
 \item{id}{integer required. The ID for this workflow.}
@@ -34,6 +41,7 @@ workflows_put(id, name, description = NULL, definition = NULL,
 \item successEmailBody string, Custom body text for success e-mail, written in Markdown.
 \item successEmailAddresses array, Addresses to notify by e-mail when the job completes successfully.
 \item failureEmailAddresses array, Addresses to notify by e-mail when the job fails.
+\item stallWarningMinutes integer, Stall warning emails will be sent after this amount of minutes.
 \item successOn boolean, If success email notifications are on
 \item failureOn boolean, If failure email notifications are on
 }}
@@ -73,6 +81,7 @@ A list containing the following elements:
 \item successEmailBody string, Custom body text for success e-mail, written in Markdown.
 \item successEmailAddresses array, Addresses to notify by e-mail when the job completes successfully.
 \item failureEmailAddresses array, Addresses to notify by e-mail when the job fails.
+\item stallWarningMinutes integer, Stall warning emails will be sent after this amount of minutes.
 \item successOn boolean, If success email notifications are on
 \item failureOn boolean, If failure email notifications are on
 }}

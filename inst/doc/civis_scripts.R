@@ -1,11 +1,11 @@
-## ----setup, include = FALSE----------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   eval = FALSE
 )
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 #  # create a container script with a parameter
 #  script <- scripts_post_containers(
 #    required_resources = list(cpu = 1024, memory = 50, diskSpace = 15),
@@ -40,13 +40,13 @@ knitr::opts_chunk$set(
 #  my_list <- read_civis(civis_script(id))
 #  
 
-## ---- eval = FALSE-------------------------------------------------------
+## ---- eval = FALSE------------------------------------------------------------
 #  source <- c('
 #   print("Hello World!")
 #  ')
 #  job <- scripts_post_r(name = 'Hello!', source = source)
 
-## ---- eval = FALSE-------------------------------------------------------
+## ---- eval = FALSE------------------------------------------------------------
 #  run <- scripts_post_r_runs(job$id)
 #  
 #  # check the status
@@ -55,14 +55,14 @@ knitr::opts_chunk$set(
 #  # automatically poll until the job completes
 #  await(scripts_get_r_runs, id = job$id, run_id = run$id)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 #  run_script <- function(source, name = 'Cool') {
 #    job <- scripts_post_r(name = name, source = source)
 #    run <- scripts_post_r_runs(job$id)
 #    await(scripts_get_r_runs, id = job$id, run_id = run$id)
 #  }
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  source <- c("
 #   library(civis)
 #   data(iris)
@@ -74,7 +74,7 @@ knitr::opts_chunk$set(
 #  ")
 #  run <- run_script(source)
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  source <- c("
 #   library(civis)
 #   data(iris)
@@ -83,7 +83,7 @@ knitr::opts_chunk$set(
 #  ")
 #  run <- run_script(source)
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  source <- c("
 #   library(civis)
 #   library(jsonlite)
@@ -92,18 +92,18 @@ knitr::opts_chunk$set(
 #  ")
 #  run_farm <- run_script(source)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 #  out <- scripts_list_r_runs_outputs(run$rId, run$id)
 #  iris <- read_civis(out$objectId, using = read.csv)
 
-## ---- eval = FALSE-------------------------------------------------------
+## ---- eval = FALSE------------------------------------------------------------
 #  # get csv run outputs
 #  iris <- read_civis(civis_script(run$rId), regex = '.csv', using = read.csv)
 #  
 #  # get JSONValues
 #  my_farm <- read_civis(civis_script(run_farm$rId))
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  # Add 'params' and 'arguments' to run_script
 #  run_script <- function(source, args, name = 'Cool') {
 #    params <- list(          # params is a list of individual parameters
@@ -135,7 +135,7 @@ knitr::opts_chunk$set(
 #  run_script(source, name = 'Pet Greeting', args = list(PET_NAME = 'Fitzgerald'))
 #  
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  params <- list(
 #    list(
 #      name = 'PET_NAME',
@@ -148,7 +148,7 @@ knitr::opts_chunk$set(
 #                        source = source,
 #                        params = params)
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  note <- c("
 #  # Pet Greeter
 #  
@@ -166,24 +166,24 @@ knitr::opts_chunk$set(
 #  ")
 #  template <- templates_post_scripts(script_id = job$id, note = note, name = 'Pet Greeter')
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  job <- scripts_post_custom(id, arguments = arguments, ...)
 #  run <- scripts_post_custom_runs(job$id)
 #  await(scripts_get_custom_runs, id = job$id, run_id = run$id)
 
-## ---- eval = FALSE-------------------------------------------------------
+## ---- eval = FALSE------------------------------------------------------------
 #  out <- run_template(template$id, arguments = list(PET_NAME = 'CHARLES'))
 
-## ---- eval = FALSE-------------------------------------------------------
+## ---- eval = FALSE------------------------------------------------------------
 #  # We might need to find the project id first
 #  search_list(type = 'project', 'My project Name')
 #  out <- run_template(template$id, arguments = list(PET_NAME = 'CHARLES'),
 #                      target_project_id = project_id)
 
-## ----eval=FALSE----------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  templates_patch_scripts(template_id$id, note = new_note)
 
-## ---- eval = FALSE-------------------------------------------------------
+## ---- eval = FALSE------------------------------------------------------------
 #  source <- c('
 #    library(civis)
 #    pet_name <- Sys.getenv("PET_NAME")
@@ -194,6 +194,6 @@ knitr::opts_chunk$set(
 #                  source = source,
 #                  params = params)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 #  templates_patch_scripts(template$id, archived = TRUE)
 

@@ -1,8 +1,8 @@
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  name <- civis::users_list_me()$name
 #  paste(name, "is really awesome!")
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  library(civis)
 #  
 #  # First we'll load a dataframe of the famous iris dataset
@@ -36,7 +36,7 @@
 #  
 #  ## [1] "The best iris species"
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  library(civis)
 #  
 #  # It really is a great dataset

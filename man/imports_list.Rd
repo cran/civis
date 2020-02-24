@@ -4,9 +4,19 @@
 \alias{imports_list}
 \title{List Imports}
 \usage{
-imports_list(type = NULL, author = NULL, destination = NULL,
-  source = NULL, status = NULL, hidden = NULL, archived = NULL,
-  limit = NULL, page_num = NULL, order = NULL, order_dir = NULL)
+imports_list(
+  type = NULL,
+  author = NULL,
+  destination = NULL,
+  source = NULL,
+  status = NULL,
+  hidden = NULL,
+  archived = NULL,
+  limit = NULL,
+  page_num = NULL,
+  order = NULL,
+  order_dir = NULL
+)
 }
 \arguments{
 \item{type}{string optional. If specified, return imports of these types. It accepts a comma-separated list, possible values are 'AutoImport', 'DbSync', 'Salesforce', 'GdocImport'.}
@@ -39,14 +49,14 @@ An array containing the following fields:
 \itemize{
 \item remoteHostId integer, 
 \item credentialId integer, 
-\item additionalCredentials array, Array that holds additional credentials used for specific imports. For salesforce imports, the first and only element is the client credential id.
+\item additionalCredentials array, Array that holds additional credentials used for specific imports. For salesforce imports, the first and only element is the client credential id. For DB Syncs, the first element is an SSL private key credential id, and the second element is the corresponding public key credential id.
 \item name string, 
 }}
 \item{destination}{list, A list containing the following elements: 
 \itemize{
 \item remoteHostId integer, 
 \item credentialId integer, 
-\item additionalCredentials array, Array that holds additional credentials used for specific imports. For salesforce imports, the first and only element is the client credential id.
+\item additionalCredentials array, Array that holds additional credentials used for specific imports. For salesforce imports, the first and only element is the client credential id. For DB Syncs, the first element is an SSL private key credential id, and the second element is the corresponding public key credential id.
 \item name string, 
 }}
 \item{schedule}{list, A list containing the following elements: 

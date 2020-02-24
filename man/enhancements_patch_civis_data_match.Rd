@@ -4,10 +4,20 @@
 \alias{enhancements_patch_civis_data_match}
 \title{Update some attributes of this Civis Data Match Enhancement}
 \usage{
-enhancements_patch_civis_data_match(id, name = NULL, schedule = NULL,
-  parent_id = NULL, notifications = NULL, input_field_mapping = NULL,
-  input_table = NULL, match_target_id = NULL, output_table = NULL,
-  max_matches = NULL, threshold = NULL)
+enhancements_patch_civis_data_match(
+  id,
+  name = NULL,
+  schedule = NULL,
+  parent_id = NULL,
+  notifications = NULL,
+  input_field_mapping = NULL,
+  input_table = NULL,
+  match_target_id = NULL,
+  output_table = NULL,
+  max_matches = NULL,
+  threshold = NULL,
+  archived = NULL
+)
 }
 \arguments{
 \item{id}{integer required. The ID for the enhancement.}
@@ -60,6 +70,8 @@ enhancements_patch_civis_data_match(id, name = NULL, schedule = NULL,
 \item{max_matches}{integer optional. The maximum number of matches per record in the input table to return. Must be between 0 and 10. 0 returns all matches.}
 
 \item{threshold}{number optional. The score threshold (between 0 and 1). Matches below this threshold will not be returned.}
+
+\item{archived}{boolean optional. Whether the Civis Data Match Job has been archived.}
 }
 \value{
 A list containing the following elements:
@@ -123,6 +135,16 @@ A list containing the following elements:
 }}
 \item{maxMatches}{integer, The maximum number of matches per record in the input table to return. Must be between 0 and 10. 0 returns all matches.}
 \item{threshold}{number, The score threshold (between 0 and 1). Matches below this threshold will not be returned.}
+\item{archived}{boolean, Whether the Civis Data Match Job has been archived.}
+\item{lastRun}{list, A list containing the following elements: 
+\itemize{
+\item id integer, 
+\item state string, 
+\item createdAt string, The time that the run was queued.
+\item startedAt string, The time that the run started.
+\item finishedAt string, The time that the run completed.
+\item error string, The error message for this run, if present.
+}}
 }
 \description{
 Update some attributes of this Civis Data Match Enhancement

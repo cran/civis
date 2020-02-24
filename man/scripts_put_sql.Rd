@@ -4,11 +4,23 @@
 \alias{scripts_put_sql}
 \title{Replace all attributes of this SQL script}
 \usage{
-scripts_put_sql(id, name, sql, remote_host_id, credential_id,
-  parent_id = NULL, user_context = NULL, params = NULL,
-  arguments = NULL, schedule = NULL, notifications = NULL,
-  next_run_at = NULL, time_zone = NULL, target_project_id = NULL,
-  csv_settings = NULL)
+scripts_put_sql(
+  id,
+  name,
+  sql,
+  remote_host_id,
+  credential_id,
+  parent_id = NULL,
+  user_context = NULL,
+  params = NULL,
+  arguments = NULL,
+  schedule = NULL,
+  notifications = NULL,
+  next_run_at = NULL,
+  time_zone = NULL,
+  target_project_id = NULL,
+  csv_settings = NULL
+)
 }
 \arguments{
 \item{id}{integer required. The ID for the script.}
@@ -76,6 +88,7 @@ scripts_put_sql(id, name, sql, remote_host_id, credential_id,
 \item unquoted boolean, Whether or not to quote fields. Default: false
 \item forceMultifile boolean, Whether or not the csv should be split into multiple files. Default: false
 \item filenamePrefix string, A user specified filename prefix for the output file to have. Default: null
+\item maxFileSize integer, The max file size, in MB, created files will be. Only available when force_multifile is true. 
 }}
 }
 \value{
@@ -181,6 +194,7 @@ A list containing the following elements:
 \item unquoted boolean, Whether or not to quote fields. Default: false
 \item forceMultifile boolean, Whether or not the csv should be split into multiple files. Default: false
 \item filenamePrefix string, A user specified filename prefix for the output file to have. Default: null
+\item maxFileSize integer, The max file size, in MB, created files will be. Only available when force_multifile is true. 
 }}
 }
 \description{

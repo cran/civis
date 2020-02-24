@@ -4,22 +4,36 @@
 \alias{scripts_put_containers}
 \title{Edit a container}
 \usage{
-scripts_put_containers(id, required_resources, docker_image_name,
-  name = NULL, parent_id = NULL, user_context = NULL,
-  params = NULL, arguments = NULL, schedule = NULL,
-  notifications = NULL, repo_http_uri = NULL, repo_ref = NULL,
-  remote_host_credential_id = NULL, git_credential_id = NULL,
-  docker_command = NULL, docker_image_tag = NULL,
-  instance_type = NULL, cancel_timeout = NULL, time_zone = NULL,
-  target_project_id = NULL)
+scripts_put_containers(
+  id,
+  required_resources,
+  docker_image_name,
+  name = NULL,
+  parent_id = NULL,
+  user_context = NULL,
+  params = NULL,
+  arguments = NULL,
+  schedule = NULL,
+  notifications = NULL,
+  repo_http_uri = NULL,
+  repo_ref = NULL,
+  remote_host_credential_id = NULL,
+  git_credential_id = NULL,
+  docker_command = NULL,
+  docker_image_tag = NULL,
+  instance_type = NULL,
+  cancel_timeout = NULL,
+  time_zone = NULL,
+  target_project_id = NULL
+)
 }
 \arguments{
 \item{id}{integer required. The ID for the script.}
 
 \item{required_resources}{list required. A list containing the following elements: 
 \itemize{
-\item cpu integer, The number of CPU shares to allocate for the container. Each core has 1024 shares.
-\item memory integer, The amount of RAM to allocate for the container (in MiB).
+\item cpu integer, The number of CPU shares to allocate for the container. Each core has 1000 shares.
+\item memory integer, The amount of RAM to allocate for the container (in MB).
 \item diskSpace number, The amount of disk space, in GB, to allocate for the container. This space will be used to hold the git repo configured for the container and anything your container writes to /tmp or /data. Fractional values (e.g. 0.25) are supported.
 \item wholeInstance boolean, Whether or not to use the entire instance. If true, cpu, memory, and disk space are not required and will be set to an instance's max.
 }}
@@ -77,7 +91,7 @@ scripts_put_containers(id, required_resources, docker_image_name,
 
 \item{git_credential_id}{integer optional. The id of the git credential to be used when checking out the specified git repo. If not supplied, the first git credential you've submitted will be used. Unnecessary if no git repo is specified or the git repo is public.}
 
-\item{docker_command}{string optional. The command to run on the container. Will be run via sh as: ["sh", "-c", dockerCommand].}
+\item{docker_command}{string optional. The command to run on the container. Will be run via sh as: ["sh", "-c", dockerCommand]. Defaults to the Docker image's ENTRYPOINT/CMD.}
 
 \item{docker_image_tag}{string optional. The tag of the docker image to pull from DockerHub.}
 
@@ -167,15 +181,15 @@ A list containing the following elements:
 }}
 \item{requiredResources}{list, A list containing the following elements: 
 \itemize{
-\item cpu integer, The number of CPU shares to allocate for the container. Each core has 1024 shares.
-\item memory integer, The amount of RAM to allocate for the container (in MiB).
+\item cpu integer, The number of CPU shares to allocate for the container. Each core has 1000 shares.
+\item memory integer, The amount of RAM to allocate for the container (in MB).
 \item diskSpace number, The amount of disk space, in GB, to allocate for the container. This space will be used to hold the git repo configured for the container and anything your container writes to /tmp or /data. Fractional values (e.g. 0.25) are supported.
 }}
 \item{repoHttpUri}{string, The location of a github repo to clone into the container, e.g. github.com/my-user/my-repo.git.}
 \item{repoRef}{string, The tag or branch of the github repo to clone into the container.}
 \item{remoteHostCredentialId}{integer, The id of the database credentials to pass into the environment of the container.}
 \item{gitCredentialId}{integer, The id of the git credential to be used when checking out the specified git repo. If not supplied, the first git credential you've submitted will be used. Unnecessary if no git repo is specified or the git repo is public.}
-\item{dockerCommand}{string, The command to run on the container. Will be run via sh as: ["sh", "-c", dockerCommand]. }
+\item{dockerCommand}{string, The command to run on the container. Will be run via sh as: ["sh", "-c", dockerCommand]. Defaults to the Docker image's ENTRYPOINT/CMD.}
 \item{dockerImageName}{string, The name of the docker image to pull from DockerHub.}
 \item{dockerImageTag}{string, The tag of the docker image to pull from DockerHub.}
 \item{instanceType}{string, The EC2 instance type to deploy to. Only available for jobs running on kubernetes.}

@@ -4,8 +4,7 @@
 \alias{workflows_post_clone}
 \title{Clone this Workflow}
 \usage{
-workflows_post_clone(id, clone_schedule = NULL,
-  clone_notifications = NULL)
+workflows_post_clone(id, clone_schedule = NULL, clone_notifications = NULL)
 }
 \arguments{
 \item{id}{integer required. The ID for the workflow.}
@@ -49,6 +48,7 @@ A list containing the following elements:
 \item successEmailBody string, Custom body text for success e-mail, written in Markdown.
 \item successEmailAddresses array, Addresses to notify by e-mail when the job completes successfully.
 \item failureEmailAddresses array, Addresses to notify by e-mail when the job fails.
+\item stallWarningMinutes integer, Stall warning emails will be sent after this amount of minutes.
 \item successOn boolean, If success email notifications are on
 \item failureOn boolean, If failure email notifications are on
 }}

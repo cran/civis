@@ -4,9 +4,18 @@
 \alias{users_list}
 \title{List users}
 \usage{
-users_list(feature_flag = NULL, account_status = NULL, query = NULL,
-  group_id = NULL, organization_id = NULL, exclude_groups = NULL,
-  limit = NULL, page_num = NULL, order = NULL, order_dir = NULL)
+users_list(
+  feature_flag = NULL,
+  account_status = NULL,
+  query = NULL,
+  group_id = NULL,
+  organization_id = NULL,
+  exclude_groups = NULL,
+  limit = NULL,
+  page_num = NULL,
+  order = NULL,
+  order_dir = NULL
+)
 }
 \arguments{
 \item{feature_flag}{string optional. Return users that have a feature flag enabled.}
@@ -35,7 +44,7 @@ An array containing the following fields:
 \item{user}{string, The username of this user.}
 \item{name}{string, The name of this user.}
 \item{email}{string, The email of this user.}
-\item{active}{string, The account status of this user.}
+\item{active}{boolean, The account status of this user.}
 \item{primaryGroupId}{integer, The ID of the primary group of this user.}
 \item{groups}{array, An array containing the following fields: 
 \itemize{

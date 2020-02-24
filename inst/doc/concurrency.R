@@ -1,4 +1,4 @@
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  nap <- function(seconds) {
 #      Sys.sleep(seconds)
 #  }
@@ -10,7 +10,7 @@
 #  end <- Sys.time()
 #  print(end - start)
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  library(future)
 #  library(civis)
 #  
@@ -35,7 +35,7 @@
 #  print("iris ROC:")
 #  print(iris_model$metrics$metrics$roc_auc)
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  library(parallel)
 #  library(doParallel)
 #  library(foreach)
@@ -63,7 +63,7 @@
 #  print("ROC Results")
 #  lapply(model_results, function(result) result$metrics$metrics$roc_auc)
 
-## ---- eval=FALSE---------------------------------------------------------
+## ---- eval=FALSE--------------------------------------------------------------
 #  library(civis)
 #  library(parallel)
 #  

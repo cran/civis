@@ -4,8 +4,13 @@
 \alias{storage_hosts_patch}
 \title{Update some attributes of this storage host}
 \usage{
-storage_hosts_patch(id, name = NULL, provider = NULL, bucket = NULL,
-  s3_options = NULL)
+storage_hosts_patch(
+  id,
+  name = NULL,
+  provider = NULL,
+  bucket = NULL,
+  s3_options = NULL
+)
 }
 \arguments{
 \item{id}{integer required. The ID of the storage host.}
@@ -24,6 +29,14 @@ storage_hosts_patch(id, name = NULL, provider = NULL, bucket = NULL,
 \value{
 A list containing the following elements:
 \item{id}{integer, The ID of the storage host.}
+\item{owner}{list, A list containing the following elements: 
+\itemize{
+\item id integer, The ID of this user.
+\item name string, This user's name.
+\item username string, This user's username.
+\item initials string, This user's initials.
+\item online boolean, Whether this user is online.
+}}
 \item{name}{string, The human readable name for the storage host.}
 \item{provider}{string, The storage provider.One of: s3.}
 \item{bucket}{string, The bucket for this storage host.}

@@ -4,17 +4,40 @@
 \alias{enhancements_post_civis_data_match}
 \title{Create a Civis Data Match Enhancement}
 \usage{
-enhancements_post_civis_data_match(name, input_field_mapping,
-  match_target_id, schedule = NULL, parent_id = NULL,
-  notifications = NULL, input_table = NULL, output_table = NULL,
-  max_matches = NULL, threshold = NULL)
+enhancements_post_civis_data_match(
+  name,
+  input_field_mapping,
+  input_table,
+  match_target_id,
+  output_table,
+  schedule = NULL,
+  parent_id = NULL,
+  notifications = NULL,
+  max_matches = NULL,
+  threshold = NULL,
+  archived = NULL
+)
 }
 \arguments{
 \item{name}{string required. The name of the enhancement job.}
 
 \item{input_field_mapping}{list required. The column mapping for the input table. See /enhancements/field_mapping for list of valid fields.}
 
+\item{input_table}{list required. A list containing the following elements: 
+\itemize{
+\item databaseName string, The Redshift database name for the table.
+\item schema string, The schema name for the table.
+\item table string, The table name.
+}}
+
 \item{match_target_id}{integer required. The ID of the Civis Data match target. See /match_targets for IDs.}
+
+\item{output_table}{list required. A list containing the following elements: 
+\itemize{
+\item databaseName string, The Redshift database name for the table.
+\item schema string, The schema name for the table.
+\item table string, The table name.
+}}
 
 \item{schedule}{list optional. A list containing the following elements: 
 \itemize{
@@ -41,23 +64,11 @@ enhancements_post_civis_data_match(name, input_field_mapping,
 \item failureOn boolean, If failure email notifications are on.
 }}
 
-\item{input_table}{list optional. A list containing the following elements: 
-\itemize{
-\item databaseName string, The Redshift database name for the table.
-\item schema string, The schema name for the table.
-\item table string, The table name.
-}}
-
-\item{output_table}{list optional. A list containing the following elements: 
-\itemize{
-\item databaseName string, The Redshift database name for the table.
-\item schema string, The schema name for the table.
-\item table string, The table name.
-}}
-
 \item{max_matches}{integer optional. The maximum number of matches per record in the input table to return. Must be between 0 and 10. 0 returns all matches.}
 
 \item{threshold}{number optional. The score threshold (between 0 and 1). Matches below this threshold will not be returned.}
+
+\item{archived}{boolean optional. Whether the Civis Data Match Job has been archived.}
 }
 \value{
 A list containing the following elements:
@@ -121,6 +132,16 @@ A list containing the following elements:
 }}
 \item{maxMatches}{integer, The maximum number of matches per record in the input table to return. Must be between 0 and 10. 0 returns all matches.}
 \item{threshold}{number, The score threshold (between 0 and 1). Matches below this threshold will not be returned.}
+\item{archived}{boolean, Whether the Civis Data Match Job has been archived.}
+\item{lastRun}{list, A list containing the following elements: 
+\itemize{
+\item id integer, 
+\item state string, 
+\item createdAt string, The time that the run was queued.
+\item startedAt string, The time that the run started.
+\item finishedAt string, The time that the run completed.
+\item error string, The error message for this run, if present.
+}}
 }
 \description{
 Create a Civis Data Match Enhancement

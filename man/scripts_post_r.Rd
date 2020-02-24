@@ -4,12 +4,24 @@
 \alias{scripts_post_r}
 \title{Create an R Script}
 \usage{
-scripts_post_r(name, source, parent_id = NULL, user_context = NULL,
-  params = NULL, arguments = NULL, schedule = NULL,
-  notifications = NULL, next_run_at = NULL, time_zone = NULL,
-  hidden = NULL, target_project_id = NULL, required_resources = NULL,
-  instance_type = NULL, cancel_timeout = NULL,
-  docker_image_tag = NULL)
+scripts_post_r(
+  name,
+  source,
+  parent_id = NULL,
+  user_context = NULL,
+  params = NULL,
+  arguments = NULL,
+  schedule = NULL,
+  notifications = NULL,
+  next_run_at = NULL,
+  time_zone = NULL,
+  hidden = NULL,
+  target_project_id = NULL,
+  required_resources = NULL,
+  instance_type = NULL,
+  cancel_timeout = NULL,
+  docker_image_tag = NULL
+)
 }
 \arguments{
 \item{name}{string required. The name of the script.}
@@ -67,8 +79,8 @@ scripts_post_r(name, source, parent_id = NULL, user_context = NULL,
 
 \item{required_resources}{list optional. A list containing the following elements: 
 \itemize{
-\item cpu integer, The number of CPU shares to allocate for the container. Each core has 1024 shares. Must be at least 2 shares.
-\item memory integer, The amount of RAM to allocate for the container (in MiB). Must be at least 4 MiB.
+\item cpu integer, The number of CPU shares to allocate for the container. Each core has 1000 shares. Must be at least 2 shares.
+\item memory integer, The amount of RAM to allocate for the container (in MB). Must be at least 4 MB.
 \item diskSpace number, The amount of disk space, in GB, to allocate for the container. This space will be used to hold the git repo configured for the container and anything your container writes to /tmp or /data. Fractional values (e.g. 0.25) are supported.
 }}
 
@@ -170,8 +182,8 @@ A list containing the following elements:
 \item{archived}{string, The archival status of the requested item(s).}
 \item{requiredResources}{list, A list containing the following elements: 
 \itemize{
-\item cpu integer, The number of CPU shares to allocate for the container. Each core has 1024 shares. Must be at least 2 shares.
-\item memory integer, The amount of RAM to allocate for the container (in MiB). Must be at least 4 MiB.
+\item cpu integer, The number of CPU shares to allocate for the container. Each core has 1000 shares. Must be at least 2 shares.
+\item memory integer, The amount of RAM to allocate for the container (in MB). Must be at least 4 MB.
 \item diskSpace number, The amount of disk space, in GB, to allocate for the container. This space will be used to hold the git repo configured for the container and anything your container writes to /tmp or /data. Fractional values (e.g. 0.25) are supported.
 }}
 \item{instanceType}{string, The EC2 instance type to deploy to. Only available for jobs running on kubernetes.}

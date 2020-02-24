@@ -4,9 +4,19 @@
 \alias{imports_put}
 \title{Update an import}
 \usage{
-imports_put(id, name, sync_type, is_outbound, source = NULL,
-  destination = NULL, schedule = NULL, notifications = NULL,
-  parent_id = NULL, next_run_at = NULL, time_zone = NULL)
+imports_put(
+  id,
+  name,
+  sync_type,
+  is_outbound,
+  source = NULL,
+  destination = NULL,
+  schedule = NULL,
+  notifications = NULL,
+  parent_id = NULL,
+  next_run_at = NULL,
+  time_zone = NULL
+)
 }
 \arguments{
 \item{id}{integer required. The ID for the import.}
@@ -21,14 +31,14 @@ imports_put(id, name, sync_type, is_outbound, source = NULL,
 \itemize{
 \item remoteHostId integer, 
 \item credentialId integer, 
-\item additionalCredentials array, Array that holds additional credentials used for specific imports. For salesforce imports, the first and only element is the client credential id.
+\item additionalCredentials array, Array that holds additional credentials used for specific imports. For salesforce imports, the first and only element is the client credential id. For DB Syncs, the first element is an SSL private key credential id, and the second element is the corresponding public key credential id.
 }}
 
 \item{destination}{list optional. A list containing the following elements: 
 \itemize{
 \item remoteHostId integer, 
 \item credentialId integer, 
-\item additionalCredentials array, Array that holds additional credentials used for specific imports. For salesforce imports, the first and only element is the client credential id.
+\item additionalCredentials array, Array that holds additional credentials used for specific imports. For salesforce imports, the first and only element is the client credential id. For DB Syncs, the first element is an SSL private key credential id, and the second element is the corresponding public key credential id.
 }}
 
 \item{schedule}{list optional. A list containing the following elements: 
@@ -68,14 +78,14 @@ A list containing the following elements:
 \itemize{
 \item remoteHostId integer, 
 \item credentialId integer, 
-\item additionalCredentials array, Array that holds additional credentials used for specific imports. For salesforce imports, the first and only element is the client credential id.
+\item additionalCredentials array, Array that holds additional credentials used for specific imports. For salesforce imports, the first and only element is the client credential id. For DB Syncs, the first element is an SSL private key credential id, and the second element is the corresponding public key credential id.
 \item name string, 
 }}
 \item{destination}{list, A list containing the following elements: 
 \itemize{
 \item remoteHostId integer, 
 \item credentialId integer, 
-\item additionalCredentials array, Array that holds additional credentials used for specific imports. For salesforce imports, the first and only element is the client credential id.
+\item additionalCredentials array, Array that holds additional credentials used for specific imports. For salesforce imports, the first and only element is the client credential id. For DB Syncs, the first element is an SSL private key credential id, and the second element is the corresponding public key credential id.
 \item name string, 
 }}
 \item{schedule}{list, A list containing the following elements: 

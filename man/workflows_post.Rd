@@ -4,9 +4,16 @@
 \alias{workflows_post}
 \title{Create a Workflow}
 \usage{
-workflows_post(name, description = NULL, from_job_chain = NULL,
-  definition = NULL, schedule = NULL, time_zone = NULL,
-  notifications = NULL, hidden = NULL)
+workflows_post(
+  name,
+  description = NULL,
+  from_job_chain = NULL,
+  definition = NULL,
+  schedule = NULL,
+  time_zone = NULL,
+  notifications = NULL,
+  hidden = NULL
+)
 }
 \arguments{
 \item{name}{string required. The name of this workflow.}
@@ -35,6 +42,7 @@ workflows_post(name, description = NULL, from_job_chain = NULL,
 \item successEmailBody string, Custom body text for success e-mail, written in Markdown.
 \item successEmailAddresses array, Addresses to notify by e-mail when the job completes successfully.
 \item failureEmailAddresses array, Addresses to notify by e-mail when the job fails.
+\item stallWarningMinutes integer, Stall warning emails will be sent after this amount of minutes.
 \item successOn boolean, If success email notifications are on
 \item failureOn boolean, If failure email notifications are on
 }}
@@ -76,6 +84,7 @@ A list containing the following elements:
 \item successEmailBody string, Custom body text for success e-mail, written in Markdown.
 \item successEmailAddresses array, Addresses to notify by e-mail when the job completes successfully.
 \item failureEmailAddresses array, Addresses to notify by e-mail when the job fails.
+\item stallWarningMinutes integer, Stall warning emails will be sent after this amount of minutes.
 \item successOn boolean, If success email notifications are on
 \item failureOn boolean, If failure email notifications are on
 }}

@@ -4,8 +4,14 @@
 \alias{workflows_put_git}
 \title{Attach an item to a file in a git repo}
 \usage{
-workflows_put_git(id, git_ref = NULL, git_branch = NULL,
-  git_path = NULL, git_repo_url = NULL)
+workflows_put_git(
+  id,
+  git_ref = NULL,
+  git_branch = NULL,
+  git_path = NULL,
+  git_repo_url = NULL,
+  pull_from_git = NULL
+)
 }
 \arguments{
 \item{id}{integer required. The ID of the file.}
@@ -17,6 +23,8 @@ workflows_put_git(id, git_ref = NULL, git_branch = NULL,
 \item{git_path}{string optional. The path of the file in the repository.}
 
 \item{git_repo_url}{string optional. The URL of the git repository.}
+
+\item{pull_from_git}{boolean optional. Automatically pull latest commit from git. Only works for scripts.}
 }
 \value{
 A list containing the following elements:
@@ -30,6 +38,7 @@ A list containing the following elements:
 \item createdAt string, 
 \item updatedAt string, 
 }}
+\item{pullFromGit}{boolean, Automatically pull latest commit from git. Only works for scripts.}
 }
 \description{
 Attach an item to a file in a git repo
