@@ -74,7 +74,7 @@ test_that("queries are executed", {
 
 test_that("civis_to_multifile produces csv links", {
   x <- civis_to_multifile_csv("SELECT * FROM datascience.iris", "redshift-general")
-  expect_equal(length(x$entries), 31)
+  expect_gt(length(x$entries), 1)
   expect_equal(x$query, "SELECT * FROM datascience.iris")
 })
 
@@ -162,17 +162,18 @@ library(future)
 
 test_that("futures work", {
   plan(civis_platform)
-  fut <- future({read_civis("datascience.iris", "redshift-general")})
-  d <- read_civis("datascience.iris", verbose = TRUE)
+  fut <- future({2+2})
   expect_is(fut, "CivisFuture")
-  d2 <- value(fut)
-  expect_equal(d[order(d$index), ], d2[order(d2$index), ], check.attributes = FALSE)
+  val <- value(fut)
+  expect_equal(val, 4)
 })
 
 test_that("additional packages get installed", {
   library(purrr)
   plan(civis_platform)
-  fut <- future({map(1:2, c)})
+  fut <- future({map(1:2, c)},
+                docker_image_name = "civisanalytics/datascience-r",
+                docker_image_tag = "latest")
   res <- value(fut)
   expect_equal(res, list(1, 2))
 })
@@ -181,7 +182,9 @@ test_that("environment is attached", {
   plan(civis_platform)
   f <- function(x) g(x)
   g <- function(x) x
-  fut <- future({f(1)})
+  fut <- future({f(1)},
+                docker_image_name = "civisanalytics/datascience-r",
+                docker_image_tag = "latest")
   res <- value(fut)
   expect_equal(res, 1)
 })
