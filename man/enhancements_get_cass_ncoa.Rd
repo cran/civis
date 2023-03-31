@@ -91,7 +91,7 @@ A list containing the following elements:
 \item{ncoaCredentialId}{integer, Credential to use when performing NCOA updates. Required if 'performNcoa' is true.}
 \item{outputLevel}{string, The set of fields persisted by a CASS or NCOA enhancement.For CASS enhancements, one of 'cass' or 'all.'For NCOA enhancements, one of 'cass', 'ncoa' , 'coalesced' or 'all'.By default, all fields will be returned.}
 \item{limitingSQL}{string, The limiting SQL for the source table. "WHERE" should be omitted (e.g. state='IL').}
-\item{chunkSize}{integer, The maximum number of records processed at a time. Note that this parameter is not available to all users.}
+\item{batchSize}{integer, The maximum number of records processed at a time. Note that this parameter is not available to all users.}
 \item{archived}{string, The archival status of the requested item(s).}
 }
 \description{

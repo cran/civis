@@ -22,6 +22,7 @@ A list containing the following elements:
 }}
 \item{name}{string, The name of the script.}
 \item{type}{string, The type of the script (e.g Custom)}
+\item{backingScriptType}{string, The type of the script backing this template (e.g Python)}
 \item{createdAt}{string, The time this script was created.}
 \item{updatedAt}{string, The time the script was last updated.}
 \item{author}{list, A list containing the following elements: 

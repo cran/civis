@@ -16,7 +16,7 @@ users_list_me_favorites(
 \arguments{
 \item{object_id}{integer optional. The id of the object. If specified as a query parameter, must also specify object_type parameter.}
 
-\item{object_type}{string optional. The type of the object that is favorited. Valid options: Project}
+\item{object_type}{string optional. The type of the object that is favorited. Valid options: Project, Container Script, Python Script, R Script, JavaScript Script, SQL Script, Workflow}
 
 \item{limit}{integer optional. Number of results to return. Defaults to 50. Maximum allowed is 1000.}
 
@@ -30,9 +30,18 @@ users_list_me_favorites(
 An array containing the following fields:
 \item{id}{integer, The id of the favorite.}
 \item{objectId}{integer, The id of the object. If specified as a query parameter, must also specify object_type parameter.}
-\item{objectType}{string, The type of the object that is favorited. Valid options: Project}
+\item{objectType}{string, The type of the object that is favorited. Valid options: Project, Container Script, Python Script, R Script, JavaScript Script, SQL Script, Workflow}
 \item{objectName}{string, The name of the object that is favorited.}
 \item{createdAt}{string, The time this favorite was created.}
+\item{objectUpdatedAt}{string, The time the object that is favorited was last updated}
+\item{objectAuthor}{list, A list containing the following elements: 
+\itemize{
+\item id integer, The ID of this user.
+\item name string, This user's name.
+\item username string, This user's username.
+\item initials string, This user's initials.
+\item online boolean, Whether this user is online.
+}}
 }
 \description{
 List Favorites

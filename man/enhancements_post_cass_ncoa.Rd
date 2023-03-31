@@ -17,7 +17,7 @@ enhancements_post_cass_ncoa(
   ncoa_credential_id = NULL,
   output_level = NULL,
   limiting_sql = NULL,
-  chunk_size = NULL
+  batch_size = NULL
 )
 }
 \arguments{
@@ -91,7 +91,7 @@ enhancements_post_cass_ncoa(
 
 \item{limiting_sql}{string optional. The limiting SQL for the source table. "WHERE" should be omitted (e.g. state='IL').}
 
-\item{chunk_size}{integer optional. The maximum number of records processed at a time. Note that this parameter is not available to all users.}
+\item{batch_size}{integer optional. The maximum number of records processed at a time. Note that this parameter is not available to all users.}
 }
 \value{
 A list containing the following elements:
@@ -175,7 +175,7 @@ A list containing the following elements:
 \item{ncoaCredentialId}{integer, Credential to use when performing NCOA updates. Required if 'performNcoa' is true.}
 \item{outputLevel}{string, The set of fields persisted by a CASS or NCOA enhancement.For CASS enhancements, one of 'cass' or 'all.'For NCOA enhancements, one of 'cass', 'ncoa' , 'coalesced' or 'all'.By default, all fields will be returned.}
 \item{limitingSQL}{string, The limiting SQL for the source table. "WHERE" should be omitted (e.g. state='IL').}
-\item{chunkSize}{integer, The maximum number of records processed at a time. Note that this parameter is not available to all users.}
+\item{batchSize}{integer, The maximum number of records processed at a time. Note that this parameter is not available to all users.}
 \item{archived}{string, The archival status of the requested item(s).}
 }
 \description{

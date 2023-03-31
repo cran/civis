@@ -1872,6 +1872,55 @@ databases_get_schema_privileges <- function(id, schema_name) {
  }
 
 
+#' Show list of database users
+#' @param id integer required. The ID of the database.
+#' @param active boolean optional. If true returns active users. If false returns deactivated users. If omitted returns all users.
+#' 
+#' @return  A list containing the following elements:
+#' \item{username}{string, Username}
+#' \item{active}{boolean, Whether the user is active or deactivated}
+#' @export
+databases_list_users <- function(id, active = NULL) {
+
+  args <- as.list(match.call())[-1]
+  path <- "/databases/{id}/users"
+  path_params  <- list(id = id)
+  query_params <- list(active = active)
+  body_params  <- list()
+  path_params  <- path_params[match_params(path_params, args)]
+  query_params <- query_params[match_params(query_params, args)]
+  body_params  <- body_params[match_params(body_params, args)]
+  resp <- call_api("GET", path, path_params, query_params, body_params)
+
+  return(resp)
+
+ }
+
+
+#' List groups in the specified database
+#' @param id integer required. The ID for the database.
+#' 
+#' @return  An array containing the following fields:
+#' \item{groupName}{string, The name of the group.}
+#' \item{members}{array, The members of the group.}
+#' @export
+databases_list_groups <- function(id) {
+
+  args <- as.list(match.call())[-1]
+  path <- "/databases/{id}/groups"
+  path_params  <- list(id = id)
+  query_params <- list()
+  body_params  <- list()
+  path_params  <- path_params[match_params(path_params, args)]
+  query_params <- query_params[match_params(query_params, args)]
+  body_params  <- body_params[match_params(body_params, args)]
+  resp <- call_api("GET", path, path_params, query_params, body_params)
+
+  return(resp)
+
+ }
+
+
 #' List whitelisted IPs for the specified database
 #' @param id integer required. The ID for the database.
 #' 
@@ -3392,7 +3441,7 @@ enhancements_list <- function(type = NULL, author = NULL, status = NULL, archive
 #' @param ncoa_credential_id integer optional. Credential to use when performing NCOA updates. Required if 'performNcoa' is true.
 #' @param output_level string optional. The set of fields persisted by a CASS or NCOA enhancement.For CASS enhancements, one of 'cass' or 'all.'For NCOA enhancements, one of 'cass', 'ncoa' , 'coalesced' or 'all'.By default, all fields will be returned.
 #' @param limiting_sql string optional. The limiting SQL for the source table. "WHERE" should be omitted (e.g. state='IL').
-#' @param chunk_size integer optional. The maximum number of records processed at a time. Note that this parameter is not available to all users.
+#' @param batch_size integer optional. The maximum number of records processed at a time. Note that this parameter is not available to all users.
 #' 
 #' @return  A list containing the following elements:
 #' \item{id}{integer, The ID for the enhancement.}
@@ -3475,16 +3524,16 @@ enhancements_list <- function(type = NULL, author = NULL, status = NULL, archive
 #' \item{ncoaCredentialId}{integer, Credential to use when performing NCOA updates. Required if 'performNcoa' is true.}
 #' \item{outputLevel}{string, The set of fields persisted by a CASS or NCOA enhancement.For CASS enhancements, one of 'cass' or 'all.'For NCOA enhancements, one of 'cass', 'ncoa' , 'coalesced' or 'all'.By default, all fields will be returned.}
 #' \item{limitingSQL}{string, The limiting SQL for the source table. "WHERE" should be omitted (e.g. state='IL').}
-#' \item{chunkSize}{integer, The maximum number of records processed at a time. Note that this parameter is not available to all users.}
+#' \item{batchSize}{integer, The maximum number of records processed at a time. Note that this parameter is not available to all users.}
 #' \item{archived}{string, The archival status of the requested item(s).}
 #' @export
-enhancements_post_cass_ncoa <- function(name, source, schedule = NULL, parent_id = NULL, notifications = NULL, destination = NULL, column_mapping = NULL, use_default_column_mapping = NULL, perform_ncoa = NULL, ncoa_credential_id = NULL, output_level = NULL, limiting_sql = NULL, chunk_size = NULL) {
+enhancements_post_cass_ncoa <- function(name, source, schedule = NULL, parent_id = NULL, notifications = NULL, destination = NULL, column_mapping = NULL, use_default_column_mapping = NULL, perform_ncoa = NULL, ncoa_credential_id = NULL, output_level = NULL, limiting_sql = NULL, batch_size = NULL) {
 
   args <- as.list(match.call())[-1]
   path <- "/enhancements/cass-ncoa"
   path_params  <- list()
   query_params <- list()
-  body_params  <- list(name = name, source = source, schedule = schedule, parentId = parent_id, notifications = notifications, destination = destination, columnMapping = column_mapping, useDefaultColumnMapping = use_default_column_mapping, performNcoa = perform_ncoa, ncoaCredentialId = ncoa_credential_id, outputLevel = output_level, limitingSQL = limiting_sql, chunkSize = chunk_size)
+  body_params  <- list(name = name, source = source, schedule = schedule, parentId = parent_id, notifications = notifications, destination = destination, columnMapping = column_mapping, useDefaultColumnMapping = use_default_column_mapping, performNcoa = perform_ncoa, ncoaCredentialId = ncoa_credential_id, outputLevel = output_level, limitingSQL = limiting_sql, batchSize = batch_size)
   path_params  <- path_params[match_params(path_params, args)]
   query_params <- query_params[match_params(query_params, args)]
   body_params  <- body_params[match_params(body_params, args)]
@@ -3579,7 +3628,7 @@ enhancements_post_cass_ncoa <- function(name, source, schedule = NULL, parent_id
 #' \item{ncoaCredentialId}{integer, Credential to use when performing NCOA updates. Required if 'performNcoa' is true.}
 #' \item{outputLevel}{string, The set of fields persisted by a CASS or NCOA enhancement.For CASS enhancements, one of 'cass' or 'all.'For NCOA enhancements, one of 'cass', 'ncoa' , 'coalesced' or 'all'.By default, all fields will be returned.}
 #' \item{limitingSQL}{string, The limiting SQL for the source table. "WHERE" should be omitted (e.g. state='IL').}
-#' \item{chunkSize}{integer, The maximum number of records processed at a time. Note that this parameter is not available to all users.}
+#' \item{batchSize}{integer, The maximum number of records processed at a time. Note that this parameter is not available to all users.}
 #' \item{archived}{string, The archival status of the requested item(s).}
 #' @export
 enhancements_get_cass_ncoa <- function(id) {
@@ -3659,7 +3708,7 @@ enhancements_get_cass_ncoa <- function(id) {
 #' @param ncoa_credential_id integer optional. Credential to use when performing NCOA updates. Required if 'performNcoa' is true.
 #' @param output_level string optional. The set of fields persisted by a CASS or NCOA enhancement.For CASS enhancements, one of 'cass' or 'all.'For NCOA enhancements, one of 'cass', 'ncoa' , 'coalesced' or 'all'.By default, all fields will be returned.
 #' @param limiting_sql string optional. The limiting SQL for the source table. "WHERE" should be omitted (e.g. state='IL').
-#' @param chunk_size integer optional. The maximum number of records processed at a time. Note that this parameter is not available to all users.
+#' @param batch_size integer optional. The maximum number of records processed at a time. Note that this parameter is not available to all users.
 #' 
 #' @return  A list containing the following elements:
 #' \item{id}{integer, The ID for the enhancement.}
@@ -3742,16 +3791,16 @@ enhancements_get_cass_ncoa <- function(id) {
 #' \item{ncoaCredentialId}{integer, Credential to use when performing NCOA updates. Required if 'performNcoa' is true.}
 #' \item{outputLevel}{string, The set of fields persisted by a CASS or NCOA enhancement.For CASS enhancements, one of 'cass' or 'all.'For NCOA enhancements, one of 'cass', 'ncoa' , 'coalesced' or 'all'.By default, all fields will be returned.}
 #' \item{limitingSQL}{string, The limiting SQL for the source table. "WHERE" should be omitted (e.g. state='IL').}
-#' \item{chunkSize}{integer, The maximum number of records processed at a time. Note that this parameter is not available to all users.}
+#' \item{batchSize}{integer, The maximum number of records processed at a time. Note that this parameter is not available to all users.}
 #' \item{archived}{string, The archival status of the requested item(s).}
 #' @export
-enhancements_put_cass_ncoa <- function(id, name, source, schedule = NULL, parent_id = NULL, notifications = NULL, destination = NULL, column_mapping = NULL, use_default_column_mapping = NULL, perform_ncoa = NULL, ncoa_credential_id = NULL, output_level = NULL, limiting_sql = NULL, chunk_size = NULL) {
+enhancements_put_cass_ncoa <- function(id, name, source, schedule = NULL, parent_id = NULL, notifications = NULL, destination = NULL, column_mapping = NULL, use_default_column_mapping = NULL, perform_ncoa = NULL, ncoa_credential_id = NULL, output_level = NULL, limiting_sql = NULL, batch_size = NULL) {
 
   args <- as.list(match.call())[-1]
   path <- "/enhancements/cass-ncoa/{id}"
   path_params  <- list(id = id)
   query_params <- list()
-  body_params  <- list(name = name, source = source, schedule = schedule, parentId = parent_id, notifications = notifications, destination = destination, columnMapping = column_mapping, useDefaultColumnMapping = use_default_column_mapping, performNcoa = perform_ncoa, ncoaCredentialId = ncoa_credential_id, outputLevel = output_level, limitingSQL = limiting_sql, chunkSize = chunk_size)
+  body_params  <- list(name = name, source = source, schedule = schedule, parentId = parent_id, notifications = notifications, destination = destination, columnMapping = column_mapping, useDefaultColumnMapping = use_default_column_mapping, performNcoa = perform_ncoa, ncoaCredentialId = ncoa_credential_id, outputLevel = output_level, limitingSQL = limiting_sql, batchSize = batch_size)
   path_params  <- path_params[match_params(path_params, args)]
   query_params <- query_params[match_params(query_params, args)]
   body_params  <- body_params[match_params(body_params, args)]
@@ -3822,7 +3871,7 @@ enhancements_put_cass_ncoa <- function(id, name, source, schedule = NULL, parent
 #' @param ncoa_credential_id integer optional. Credential to use when performing NCOA updates. Required if 'performNcoa' is true.
 #' @param output_level string optional. The set of fields persisted by a CASS or NCOA enhancement.For CASS enhancements, one of 'cass' or 'all.'For NCOA enhancements, one of 'cass', 'ncoa' , 'coalesced' or 'all'.By default, all fields will be returned.
 #' @param limiting_sql string optional. The limiting SQL for the source table. "WHERE" should be omitted (e.g. state='IL').
-#' @param chunk_size integer optional. The maximum number of records processed at a time. Note that this parameter is not available to all users.
+#' @param batch_size integer optional. The maximum number of records processed at a time. Note that this parameter is not available to all users.
 #' 
 #' @return  A list containing the following elements:
 #' \item{id}{integer, The ID for the enhancement.}
@@ -3905,16 +3954,16 @@ enhancements_put_cass_ncoa <- function(id, name, source, schedule = NULL, parent
 #' \item{ncoaCredentialId}{integer, Credential to use when performing NCOA updates. Required if 'performNcoa' is true.}
 #' \item{outputLevel}{string, The set of fields persisted by a CASS or NCOA enhancement.For CASS enhancements, one of 'cass' or 'all.'For NCOA enhancements, one of 'cass', 'ncoa' , 'coalesced' or 'all'.By default, all fields will be returned.}
 #' \item{limitingSQL}{string, The limiting SQL for the source table. "WHERE" should be omitted (e.g. state='IL').}
-#' \item{chunkSize}{integer, The maximum number of records processed at a time. Note that this parameter is not available to all users.}
+#' \item{batchSize}{integer, The maximum number of records processed at a time. Note that this parameter is not available to all users.}
 #' \item{archived}{string, The archival status of the requested item(s).}
 #' @export
-enhancements_patch_cass_ncoa <- function(id, name = NULL, schedule = NULL, parent_id = NULL, notifications = NULL, source = NULL, destination = NULL, column_mapping = NULL, use_default_column_mapping = NULL, perform_ncoa = NULL, ncoa_credential_id = NULL, output_level = NULL, limiting_sql = NULL, chunk_size = NULL) {
+enhancements_patch_cass_ncoa <- function(id, name = NULL, schedule = NULL, parent_id = NULL, notifications = NULL, source = NULL, destination = NULL, column_mapping = NULL, use_default_column_mapping = NULL, perform_ncoa = NULL, ncoa_credential_id = NULL, output_level = NULL, limiting_sql = NULL, batch_size = NULL) {
 
   args <- as.list(match.call())[-1]
   path <- "/enhancements/cass-ncoa/{id}"
   path_params  <- list(id = id)
   query_params <- list()
-  body_params  <- list(name = name, schedule = schedule, parentId = parent_id, notifications = notifications, source = source, destination = destination, columnMapping = column_mapping, useDefaultColumnMapping = use_default_column_mapping, performNcoa = perform_ncoa, ncoaCredentialId = ncoa_credential_id, outputLevel = output_level, limitingSQL = limiting_sql, chunkSize = chunk_size)
+  body_params  <- list(name = name, schedule = schedule, parentId = parent_id, notifications = notifications, source = source, destination = destination, columnMapping = column_mapping, useDefaultColumnMapping = use_default_column_mapping, performNcoa = perform_ncoa, ncoaCredentialId = ncoa_credential_id, outputLevel = output_level, limitingSQL = limiting_sql, batchSize = batch_size)
   path_params  <- path_params[match_params(path_params, args)]
   query_params <- query_params[match_params(query_params, args)]
   body_params  <- body_params[match_params(body_params, args)]
@@ -5162,7 +5211,7 @@ enhancements_delete_cass_ncoa_projects <- function(id, project_id) {
 #' \item{ncoaCredentialId}{integer, Credential to use when performing NCOA updates. Required if 'performNcoa' is true.}
 #' \item{outputLevel}{string, The set of fields persisted by a CASS or NCOA enhancement.For CASS enhancements, one of 'cass' or 'all.'For NCOA enhancements, one of 'cass', 'ncoa' , 'coalesced' or 'all'.By default, all fields will be returned.}
 #' \item{limitingSQL}{string, The limiting SQL for the source table. "WHERE" should be omitted (e.g. state='IL').}
-#' \item{chunkSize}{integer, The maximum number of records processed at a time. Note that this parameter is not available to all users.}
+#' \item{batchSize}{integer, The maximum number of records processed at a time. Note that this parameter is not available to all users.}
 #' \item{archived}{string, The archival status of the requested item(s).}
 #' @export
 enhancements_put_cass_ncoa_archive <- function(id, status) {
@@ -24341,6 +24390,7 @@ scripts_delete_javascript <- function(id) {
 #' \item{id}{integer, The ID for the script.}
 #' \item{name}{string, The name of the script.}
 #' \item{type}{string, The type of the script (e.g Custom)}
+#' \item{backingScriptType}{string, The type of the script backing this template (e.g Python)}
 #' \item{createdAt}{string, The time this script was created.}
 #' \item{updatedAt}{string, The time the script was last updated.}
 #' \item{author}{list, A list containing the following elements: 
@@ -24449,6 +24499,7 @@ scripts_list_custom <- function(from_template_id = NULL, author = NULL, status =
 #' }}
 #' \item{name}{string, The name of the script.}
 #' \item{type}{string, The type of the script (e.g Custom)}
+#' \item{backingScriptType}{string, The type of the script backing this template (e.g Python)}
 #' \item{createdAt}{string, The time this script was created.}
 #' \item{updatedAt}{string, The time the script was last updated.}
 #' \item{author}{list, A list containing the following elements: 
@@ -24583,6 +24634,7 @@ scripts_post_custom <- function(from_template_id, name = NULL, parent_id = NULL,
 #' }}
 #' \item{name}{string, The name of the script.}
 #' \item{type}{string, The type of the script (e.g Custom)}
+#' \item{backingScriptType}{string, The type of the script backing this template (e.g Python)}
 #' \item{createdAt}{string, The time this script was created.}
 #' \item{updatedAt}{string, The time the script was last updated.}
 #' \item{author}{list, A list containing the following elements: 
@@ -24754,6 +24806,7 @@ scripts_get_custom <- function(id) {
 #' }}
 #' \item{name}{string, The name of the script.}
 #' \item{type}{string, The type of the script (e.g Custom)}
+#' \item{backingScriptType}{string, The type of the script backing this template (e.g Python)}
 #' \item{createdAt}{string, The time this script was created.}
 #' \item{updatedAt}{string, The time the script was last updated.}
 #' \item{author}{list, A list containing the following elements: 
@@ -24925,6 +24978,7 @@ scripts_put_custom <- function(id, name = NULL, parent_id = NULL, arguments = NU
 #' }}
 #' \item{name}{string, The name of the script.}
 #' \item{type}{string, The type of the script (e.g Custom)}
+#' \item{backingScriptType}{string, The type of the script backing this template (e.g Python)}
 #' \item{createdAt}{string, The time this script was created.}
 #' \item{updatedAt}{string, The time the script was last updated.}
 #' \item{author}{list, A list containing the following elements: 
@@ -30027,6 +30081,7 @@ scripts_delete_custom_projects <- function(id, project_id) {
 #' }}
 #' \item{name}{string, The name of the script.}
 #' \item{type}{string, The type of the script (e.g Custom)}
+#' \item{backingScriptType}{string, The type of the script backing this template (e.g Python)}
 #' \item{createdAt}{string, The time this script was created.}
 #' \item{updatedAt}{string, The time the script was last updated.}
 #' \item{author}{list, A list containing the following elements: 
@@ -30668,6 +30723,7 @@ scripts_post_r_clone <- function(id, clone_schedule = NULL, clone_triggers = NUL
 #' }}
 #' \item{name}{string, The name of the script.}
 #' \item{type}{string, The type of the script (e.g Custom)}
+#' \item{backingScriptType}{string, The type of the script backing this template (e.g Python)}
 #' \item{createdAt}{string, The time this script was created.}
 #' \item{updatedAt}{string, The time the script was last updated.}
 #' \item{author}{list, A list containing the following elements: 
@@ -32997,7 +33053,7 @@ tables_post_enhancements_geocodings <- function(source_table_id) {
 #' @param perform_ncoa boolean optional. Whether to update addresses for records matching the National Change of Address (NCOA) database.
 #' @param ncoa_credential_id integer optional. Credential to use when performing NCOA updates. Required if 'performNcoa' is true.
 #' @param output_level string optional. The set of fields persisted by a CASS or NCOA enhancement.For CASS enhancements, one of 'cass' or 'all.'For NCOA enhancements, one of 'cass', 'ncoa' , 'coalesced' or 'all'.By default, all fields will be returned.
-#' @param chunk_size integer optional. The maximum number of records processed at a time. Note that this parameter is not available to all users.
+#' @param batch_size integer optional. The maximum number of records processed at a time. Note that this parameter is not available to all users.
 #' 
 #' @return  A list containing the following elements:
 #' \item{id}{integer, The ID of the enhancement.}
@@ -33008,15 +33064,15 @@ tables_post_enhancements_geocodings <- function(source_table_id) {
 #' \item{performNcoa}{boolean, Whether to update addresses for records matching the National Change of Address (NCOA) database.}
 #' \item{ncoaCredentialId}{integer, Credential to use when performing NCOA updates. Required if 'performNcoa' is true.}
 #' \item{outputLevel}{string, The set of fields persisted by a CASS or NCOA enhancement.For CASS enhancements, one of 'cass' or 'all.'For NCOA enhancements, one of 'cass', 'ncoa' , 'coalesced' or 'all'.By default, all fields will be returned.}
-#' \item{chunkSize}{integer, The maximum number of records processed at a time. Note that this parameter is not available to all users.}
+#' \item{batchSize}{integer, The maximum number of records processed at a time. Note that this parameter is not available to all users.}
 #' @export
-tables_post_enhancements_cass_ncoa <- function(source_table_id, perform_ncoa = NULL, ncoa_credential_id = NULL, output_level = NULL, chunk_size = NULL) {
+tables_post_enhancements_cass_ncoa <- function(source_table_id, perform_ncoa = NULL, ncoa_credential_id = NULL, output_level = NULL, batch_size = NULL) {
 
   args <- as.list(match.call())[-1]
   path <- "/tables/{source_table_id}/enhancements/cass-ncoa"
   path_params  <- list(source_table_id = source_table_id)
   query_params <- list()
-  body_params  <- list(performNcoa = perform_ncoa, ncoaCredentialId = ncoa_credential_id, outputLevel = output_level, chunkSize = chunk_size)
+  body_params  <- list(performNcoa = perform_ncoa, ncoaCredentialId = ncoa_credential_id, outputLevel = output_level, batchSize = batch_size)
   path_params  <- path_params[match_params(path_params, args)]
   query_params <- query_params[match_params(query_params, args)]
   body_params  <- body_params[match_params(body_params, args)]
@@ -33068,7 +33124,7 @@ tables_get_enhancements_geocodings <- function(id, source_table_id) {
 #' \item{performNcoa}{boolean, Whether to update addresses for records matching the National Change of Address (NCOA) database.}
 #' \item{ncoaCredentialId}{integer, Credential to use when performing NCOA updates. Required if 'performNcoa' is true.}
 #' \item{outputLevel}{string, The set of fields persisted by a CASS or NCOA enhancement.For CASS enhancements, one of 'cass' or 'all.'For NCOA enhancements, one of 'cass', 'ncoa' , 'coalesced' or 'all'.By default, all fields will be returned.}
-#' \item{chunkSize}{integer, The maximum number of records processed at a time. Note that this parameter is not available to all users.}
+#' \item{batchSize}{integer, The maximum number of records processed at a time. Note that this parameter is not available to all users.}
 #' @export
 tables_get_enhancements_cass_ncoa <- function(id, source_table_id) {
 
@@ -34921,6 +34977,7 @@ users_post <- function(name, email, primary_group_id, user, active = NULL, city 
 #' \item{assumingAdminExpiration}{string, When the user's admin role is set to expire.}
 #' \item{superadminModeExpiration}{string, The user is in superadmin mode when set to a DateTime. The user is not in superadmin mode when set to null.}
 #' \item{disableNonCompliantFedrampFeatures}{boolean, Whether to disable non-compliant fedramp features.}
+#' \item{personaRole}{string, The high-level role representing the current user's main permissions.}
 #' \item{createdById}{integer, The ID of the user who created this user.}
 #' \item{lastUpdatedById}{integer, The ID of the user who last updated this user.}
 #' @export
@@ -35018,6 +35075,7 @@ users_list_me <- function() {
 #' \item assumeRoleHistory string, JSON string of previously assumed roles.
 #' \item defaultSuccessNotificationsOn boolean, Whether email notifications for the success of all applicable jobs are on by default.
 #' \item defaultFailureNotificationsOn boolean, Whether email notifications for the failure of all applicable jobs are on by default.
+#' \item myActivityMetrics boolean, Whether the activity metrics are filtered to the current user.
 #' }
 #' @param last_checked_announcements string optional. The date and time at which the user last checked their announcements.
 #' 
@@ -35051,6 +35109,7 @@ users_list_me <- function() {
 #' \item{assumingAdminExpiration}{string, When the user's admin role is set to expire.}
 #' \item{superadminModeExpiration}{string, The user is in superadmin mode when set to a DateTime. The user is not in superadmin mode when set to null.}
 #' \item{disableNonCompliantFedrampFeatures}{boolean, Whether to disable non-compliant fedramp features.}
+#' \item{personaRole}{string, The high-level role representing the current user's main permissions.}
 #' \item{createdById}{integer, The ID of the user who created this user.}
 #' \item{lastUpdatedById}{integer, The ID of the user who last updated this user.}
 #' @export
@@ -35161,6 +35220,7 @@ users_get_me_themes <- function(id) {
 #' \item{assumingAdminExpiration}{string, When the user's admin role is set to expire.}
 #' \item{superadminModeExpiration}{string, The user is in superadmin mode when set to a DateTime. The user is not in superadmin mode when set to null.}
 #' \item{disableNonCompliantFedrampFeatures}{boolean, Whether to disable non-compliant fedramp features.}
+#' \item{personaRole}{string, The high-level role representing the current user's main permissions.}
 #' \item{createdById}{integer, The ID of the user who created this user.}
 #' \item{lastUpdatedById}{integer, The ID of the user who last updated this user.}
 #' @export
@@ -35213,6 +35273,7 @@ users_post_me_superadmin <- function() {
 #' \item{assumingAdminExpiration}{string, When the user's admin role is set to expire.}
 #' \item{superadminModeExpiration}{string, The user is in superadmin mode when set to a DateTime. The user is not in superadmin mode when set to null.}
 #' \item{disableNonCompliantFedrampFeatures}{boolean, Whether to disable non-compliant fedramp features.}
+#' \item{personaRole}{string, The high-level role representing the current user's main permissions.}
 #' \item{createdById}{integer, The ID of the user who created this user.}
 #' \item{lastUpdatedById}{integer, The ID of the user who last updated this user.}
 #' @export
@@ -35629,7 +35690,7 @@ users_delete_sessions <- function(id) {
 
 #' List Favorites
 #' @param object_id integer optional. The id of the object. If specified as a query parameter, must also specify object_type parameter.
-#' @param object_type string optional. The type of the object that is favorited. Valid options: Project
+#' @param object_type string optional. The type of the object that is favorited. Valid options: Project, Container Script, Python Script, R Script, JavaScript Script, SQL Script, Workflow
 #' @param limit integer optional. Number of results to return. Defaults to 50. Maximum allowed is 1000.
 #' @param page_num integer optional. Page number of the results to return. Defaults to the first page, 1.
 #' @param order string optional. The field on which to order the result set. Defaults to created_at. Must be one of: created_at, object_type, object_id.
@@ -35638,9 +35699,18 @@ users_delete_sessions <- function(id) {
 #' @return  An array containing the following fields:
 #' \item{id}{integer, The id of the favorite.}
 #' \item{objectId}{integer, The id of the object. If specified as a query parameter, must also specify object_type parameter.}
-#' \item{objectType}{string, The type of the object that is favorited. Valid options: Project}
+#' \item{objectType}{string, The type of the object that is favorited. Valid options: Project, Container Script, Python Script, R Script, JavaScript Script, SQL Script, Workflow}
 #' \item{objectName}{string, The name of the object that is favorited.}
 #' \item{createdAt}{string, The time this favorite was created.}
+#' \item{objectUpdatedAt}{string, The time the object that is favorited was last updated}
+#' \item{objectAuthor}{list, A list containing the following elements: 
+#' \itemize{
+#' \item id integer, The ID of this user.
+#' \item name string, This user's name.
+#' \item username string, This user's username.
+#' \item initials string, This user's initials.
+#' \item online boolean, Whether this user is online.
+#' }}
 #' @export
 users_list_me_favorites <- function(object_id = NULL, object_type = NULL, limit = NULL, page_num = NULL, order = NULL, order_dir = NULL) {
 
@@ -35661,14 +35731,23 @@ users_list_me_favorites <- function(object_id = NULL, object_type = NULL, limit 
 
 #' Favorite an item
 #' @param object_id integer required. The id of the object. If specified as a query parameter, must also specify object_type parameter.
-#' @param object_type string required. The type of the object that is favorited. Valid options: Project
+#' @param object_type string required. The type of the object that is favorited. Valid options: Project, Container Script, Python Script, R Script, JavaScript Script, SQL Script, Workflow
 #' 
 #' @return  A list containing the following elements:
 #' \item{id}{integer, The id of the favorite.}
 #' \item{objectId}{integer, The id of the object. If specified as a query parameter, must also specify object_type parameter.}
-#' \item{objectType}{string, The type of the object that is favorited. Valid options: Project}
+#' \item{objectType}{string, The type of the object that is favorited. Valid options: Project, Container Script, Python Script, R Script, JavaScript Script, SQL Script, Workflow}
 #' \item{objectName}{string, The name of the object that is favorited.}
 #' \item{createdAt}{string, The time this favorite was created.}
+#' \item{objectUpdatedAt}{string, The time the object that is favorited was last updated}
+#' \item{objectAuthor}{list, A list containing the following elements: 
+#' \itemize{
+#' \item id integer, The ID of this user.
+#' \item name string, This user's name.
+#' \item username string, This user's username.
+#' \item initials string, This user's initials.
+#' \item online boolean, Whether this user is online.
+#' }}
 #' @export
 users_post_me_favorites <- function(object_id, object_type) {
 

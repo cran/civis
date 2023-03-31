@@ -1,6 +1,6 @@
 Package: civis
 Title: R Client for the 'Civis Platform API'
-Version: 3.1.1
+Version: 3.1.2
 Authors@R: c(
   person("Peter", "Cooman", email = "pcooman@civisanalytics.com", role = c("cre", "ctb")),
   person("Patrick", "Miller", email = "pmiller@civisanalytics.com", role = "aut"),
@@ -36,7 +36,7 @@ Collate: 'await.R' 'civis_future.R' 'civis_ml.R' 'civis_ml_plot.R'
         'tables.R' 'utils.R' 'zzz.R'
 Encoding: UTF-8
 NeedsCompilation: no
-Packaged: 2023-02-28 00:34:54 UTC; pcooman
+Packaged: 2023-03-30 19:34:52 UTC; pcooman
 Author: Peter Cooman [cre, ctb],
   Patrick Miller [aut],
   Keith Ingersoll [aut],
@@ -53,4 +53,4 @@ Author: Peter Cooman [cre, ctb],
   Bryan Baird [ctb]
 Maintainer: Peter Cooman <pcooman@civisanalytics.com>
 Repository: CRAN
-Date/Publication: 2023-02-28 08:02:29 UTC
+Date/Publication: 2023-03-31 08:00:03 UTC
