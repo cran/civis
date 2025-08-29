@@ -16,21 +16,21 @@ users_list_me_favorites(
 \arguments{
 \item{object_id}{integer optional. The id of the object. If specified as a query parameter, must also specify object_type parameter.}
 
-\item{object_type}{string optional. The type of the object that is favorited. Valid options: Project, Container Script, Python Script, R Script, JavaScript Script, SQL Script, Workflow}
+\item{object_type}{string optional. The type of the object that is favorited. Valid options: Container Script, Identity Resolution, Import, Python Script, R Script, dbt Script, JavaScript Script, SQL Script, Template Script, Project, Workflow, Tableau Report, Service Report, HTML Report, SQL Report}
 
 \item{limit}{integer optional. Number of results to return. Defaults to 50. Maximum allowed is 1000.}
 
 \item{page_num}{integer optional. Page number of the results to return. Defaults to the first page, 1.}
 
-\item{order}{string optional. The field on which to order the result set. Defaults to created_at. Must be one of: created_at, object_type, object_id.}
+\item{order}{string optional. The field on which to order the result set. Defaults to position. Must be one of: position, created_at.}
 
-\item{order_dir}{string optional. Direction in which to sort, either asc (ascending) or desc (descending) defaulting to desc.}
+\item{order_dir}{string optional. Direction in which to sort, either asc (ascending) or desc (descending) defaulting to asc.}
 }
 \value{
 An array containing the following fields:
 \item{id}{integer, The id of the favorite.}
 \item{objectId}{integer, The id of the object. If specified as a query parameter, must also specify object_type parameter.}
-\item{objectType}{string, The type of the object that is favorited. Valid options: Project, Container Script, Python Script, R Script, JavaScript Script, SQL Script, Workflow}
+\item{objectType}{string, The type of the object that is favorited. Valid options: Container Script, Identity Resolution, Import, Python Script, R Script, dbt Script, JavaScript Script, SQL Script, Template Script, Project, Workflow, Tableau Report, Service Report, HTML Report, SQL Report}
 \item{objectName}{string, The name of the object that is favorited.}
 \item{createdAt}{string, The time this favorite was created.}
 \item{objectUpdatedAt}{string, The time the object that is favorited was last updated}
@@ -42,6 +42,7 @@ An array containing the following fields:
 \item initials string, This user's initials.
 \item online boolean, Whether this user is online.
 }}
+\item{position}{integer, The rank position of this favorite. Use the patch users/me/favorites/:id/ranking/ endpoints to update.}
 }
 \description{
 List Favorites

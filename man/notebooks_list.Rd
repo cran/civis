@@ -36,7 +36,7 @@ notebooks_list(
 An array containing the following fields:
 \item{id}{integer, The ID for this notebook.}
 \item{name}{string, The name of this notebook.}
-\item{language}{string, The kernel language of this notebook.}
+\item{language}{string, The kernel language of this notebook ("python3" or "r"). Defaults to "python3".}
 \item{description}{string, The description of this notebook.}
 \item{user}{list, A list containing the following elements: 
 \itemize{
@@ -65,7 +65,7 @@ An array containing the following fields:
 \item maxCpuUsage number, If the deployment has finished, the maximum amount of cpu used during the deployment, in millicores.
 \item createdAt string, 
 \item updatedAt string, 
-\item notebookId integer, The ID of owning Notebook
+\item notebookId integer, The ID of the owning Notebook
 }}
 \item{archived}{string, The archival status of the requested item(s).}
 }

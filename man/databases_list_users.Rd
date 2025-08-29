@@ -9,7 +9,7 @@ databases_list_users(id, active = NULL)
 \arguments{
 \item{id}{integer required. The ID of the database.}
 
-\item{active}{boolean optional. If true returns active users. If false returns deactivated users. If omitted returns all users.}
+\item{active}{boolean optional. If true returns active users. If false returns deactivated users. Defaults to true.}
 }
 \value{
 A list containing the following elements:

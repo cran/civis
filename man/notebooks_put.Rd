@@ -31,7 +31,7 @@ notebooks_put(
 
 \item{name}{string optional. The name of this notebook.}
 
-\item{language}{string optional. The kernel language of this notebook.}
+\item{language}{string optional. The kernel language of this notebook ("python3" or "r"). Defaults to "python3".}
 
 \item{description}{string optional. The description of this notebook.}
 
@@ -59,7 +59,7 @@ notebooks_put(
 
 \item{partition_label}{string optional. The partition label used to run this object.}
 
-\item{git_repo_url}{string optional. The url of the git repository}
+\item{git_repo_url}{string optional. The URL of the git repository (e.g., https://github.com/organization/repo_name.git).}
 
 \item{git_ref}{string optional. The git reference if git repo is specified}
 
@@ -69,7 +69,7 @@ notebooks_put(
 A list containing the following elements:
 \item{id}{integer, The ID for this notebook.}
 \item{name}{string, The name of this notebook.}
-\item{language}{string, The kernel language of this notebook.}
+\item{language}{string, The kernel language of this notebook ("python3" or "r"). Defaults to "python3".}
 \item{description}{string, The description of this notebook.}
 \item{notebookUrl}{string, Time-limited URL to get the .ipynb file for this notebook.}
 \item{notebookPreviewUrl}{string, Time-limited URL to get the .htm preview file for this notebook.}
@@ -109,14 +109,14 @@ A list containing the following elements:
 \item maxCpuUsage number, If the deployment has finished, the maximum amount of cpu used during the deployment, in millicores.
 \item createdAt string, 
 \item updatedAt string, 
-\item notebookId integer, The ID of owning Notebook
+\item notebookId integer, The ID of the owning Notebook
 }}
 \item{credentials}{array, A list of credential IDs to pass to the notebook.}
 \item{environmentVariables}{list, Environment variables to be passed into the Notebook.}
 \item{idleTimeout}{integer, How long the notebook will stay alive without any kernel activity.}
 \item{partitionLabel}{string, The partition label used to run this object.}
 \item{gitRepoId}{integer, The ID of the git repository.}
-\item{gitRepoUrl}{string, The url of the git repository}
+\item{gitRepoUrl}{string, The URL of the git repository (e.g., https://github.com/organization/repo_name.git).}
 \item{gitRef}{string, The git reference if git repo is specified}
 \item{gitPath}{string, The path to the .ipynb file in the git repo that will be started up on notebook launch}
 \item{myPermissionLevel}{string, Your permission level on the object. One of "read", "write", or "manage".}
